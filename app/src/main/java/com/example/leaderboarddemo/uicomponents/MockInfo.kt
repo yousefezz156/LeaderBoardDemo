@@ -12,6 +12,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.leaderboarddemo.R
+import com.example.leaderboarddemo.ui.theme.backgroundColorsForWhiteText
 
 @Composable
 fun MockInfo(name: String, score: Int, rank: Int, modifier: Modifier = Modifier) {
@@ -32,7 +33,11 @@ fun MockInfo(name: String, score: Int, rank: Int, modifier: Modifier = Modifier)
         Spacer(modifier = modifier.padding(6.dp))
         Text(
             text = score.toString() + " Pts",
-            color = colorResource(id = if (rank == 2 || rank == 3) R.color.blue_light else R.color.blue),
+            color = if(rank==2) colorResource(id = R.color.orange)else if( rank == 3) colorResource(
+                id = R.color.blue_light
+            ) else colorResource(
+                id = R.color.yellow
+            ),
             fontSize = 15.sp
         )
         Spacer(modifier = modifier.padding(if (rank == 1) 16.dp else 2.dp))

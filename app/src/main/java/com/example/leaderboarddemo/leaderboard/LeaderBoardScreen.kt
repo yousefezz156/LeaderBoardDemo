@@ -54,6 +54,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.colorspace.WhitePoint
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -115,7 +116,7 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
                         1.0f to Color(0xFF3E97FF)
                     ),
                     start = Offset(0f, 0f),
-                    end = Offset(2000f, 1400f)
+                    end = Offset(100f, 1400f)
                 )
 
             )
@@ -200,7 +201,7 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
                 }
                 Box(
                     modifier = modifier
-                        .offset(132.dp, 104.dp)
+                        .offset(145.dp, 104.dp)
                         .height(176.dp)
                         .width(122.dp)
                         .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
@@ -217,20 +218,20 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
                     x = 305.dp,
                     y = 110.dp,
                     mockData = mockList[2],
-                    background_color = R.color.grey
+                    background_color = R.color.blue_light
                 )
 
                 CircleShapeTop(
-                    x = 157.dp,
+                    x = 167.dp,
                     y = 56.dp,
                     mockData = mockList[0],
-                    background_color = R.color.grey
+                    background_color = R.color.yellow
                 )
 
                 CircleShapeTop(
                     50.dp, 110.dp,
                     mockData = mockList[1],
-                    background_color = R.color.purple_200
+                    background_color = R.color.orange
                 )
 
 
@@ -255,11 +256,23 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = modifier.padding(4.dp))
-                    Text(
-                        stringResource(id = R.string.myrank),
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.blue_light)
-                    )
+                    Row() {
+                        Text(
+                            stringResource(id = R.string.myrank),
+                            fontSize = 16.sp,
+                            color = colorResource(id = R.color.blue_light)
+                        )
+                        Spacer(modifier = modifier.padding(6.dp))
+                        Box(contentAlignment = Alignment.Center) {
+
+
+                            Image(
+                                painter = painterResource(id = R.drawable.rectangle_6),
+                                contentDescription = null
+                            )
+                            Text(text = mockList.size.toString(), color = Color.White, fontSize = 10.sp)
+                        }
+                    }
                     Spacer(modifier = modifier.padding(12.dp))
                 }
                 Row(

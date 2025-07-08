@@ -12,5 +12,12 @@
     <color name="grey">#bbbbbb</color>
     <color name="Stroke">#EFEFEF</color>
     <color name="purple">#5A3D8B</color>
-    <string name="borderColor">#555E67</string>
+    <color name="borderColor">#555E67</color>
+    <color name="yellow">#FFD702</color>
+    <color name="orange">#D98C55</color>
+    <color name="semi_light_blue">#087AFF</color>
+    <color name="dark_yello">#D7B501</color>
+    <color name="dark_orange">#C56723</color>
+    <color name="yellow_uknowon">#FFAA00</color>
+
 </resources>

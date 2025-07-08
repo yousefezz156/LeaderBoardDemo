@@ -24,11 +24,7 @@ import com.example.leaderboarddemo.mockdata.MockData
 
 @Composable
 fun CircleShapeTop(
-    x: Dp,
-    y: Dp,
-    mockData: MockData,
-    background_color: Int,
-    modifier: Modifier = Modifier
+    x: Dp, y: Dp, mockData: MockData, background_color: Int, modifier: Modifier = Modifier
 ) {
     Box {
         Box(
@@ -36,7 +32,13 @@ fun CircleShapeTop(
                 .offset(x, y)
                 .size(if (mockData.rank == 2 || mockData.rank == 3) 54.dp else 73.dp)
                 .clip(shape = androidx.compose.foundation.shape.CircleShape)
-                .border(2.dp, color = colorResource(id = R.color.blue_light), androidx.compose.foundation.shape.CircleShape)
+                .border(
+                    2.dp,
+                    color = if (mockData.rank == 1) colorResource(id = R.color.dark_yello) else if (mockData.rank == 2) colorResource(
+                        id = R.color.dark_orange
+                    ) else colorResource(id = R.color.semi_light_blue),
+                    androidx.compose.foundation.shape.CircleShape
+                )
                 .background(
                     color = colorResource(
                         id = background_color
@@ -58,7 +60,7 @@ fun CircleShapeTop(
                 modifier = modifier
                     .width(34.dp)
                     .height(26.dp)
-                    .offset(x = 176.dp, y = 25.dp)
+                    .offset(x = 186.dp, y = 25.dp)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.group_1_1_),
