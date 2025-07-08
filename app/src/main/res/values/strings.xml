@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">LeaderBoardDemo</string>
+    <string name="hello" > Hello,</string>
+    <string name="welcome_challenge"> Welcome to the challenge</string>
+    <string name="ahmed">Ahmed</string>
+    <string name="yousef">Yousef</string>
+    <string name="ezz">Ezz</string>
+    <string name="mahoumd">Mahmoud</string>
+    <string name="mohamed">Mohamed</string>
+    <string name="mostafa">Mostafa</string>
+    <string name="kamal">Kamal</string>
+    <string name="seif">Seif</string>
+    <string name="anas">Anas</string>
+    <string name="ranking">Ranking</string>
+    <string name="myrank"> My Rank </string>
+    <string name="filter" > Filter </string>
+    <string name="transaction">Transaction</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="data_range">Data Range</string>
+    <string name="reset">Reset</string>
+    <string name="today">Today</string>
+    <string name="this_week">This Week</string>
+    <string name="this_month">This Month</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
 </resources>
