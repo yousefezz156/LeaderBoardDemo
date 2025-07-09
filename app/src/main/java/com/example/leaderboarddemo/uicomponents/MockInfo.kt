@@ -1,5 +1,9 @@
 package com.example.leaderboarddemo.uicomponents
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -15,32 +19,37 @@ import com.example.leaderboarddemo.R
 import com.example.leaderboarddemo.ui.theme.backgroundColorsForWhiteText
 
 @Composable
-fun MockInfo(name: String, score: Int, rank: Int, modifier: Modifier = Modifier) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(
-            start = if (rank == 2 || rank == 3) 25.dp else 31.dp,
-            top = if (rank == 2 || rank == 3) 16.dp else 31.dp,
-            end = if (rank == 3) 25.dp else 0.dp
-        )
+fun MockInfo(name: String, score: Int, rank: Int, show:Boolean,modifier: Modifier = Modifier) {
+    AnimatedVisibility(visible = show, enter = fadeIn(animationSpec = tween(500, easing = FastOutSlowInEasing))
     ) {
-        Text(
-            text = name,
-            color = Color.White,
-            fontSize = 12.sp,
 
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier.padding(
+                start = if (rank == 2 || rank == 3) 25.dp else 31.dp,
+                top = if (rank == 2 || rank == 3) 16.dp else 31.dp,
+                end = if (rank == 3) 25.dp else 0.dp
             )
-        Spacer(modifier = modifier.padding(6.dp))
-        Text(
-            text = score.toString() + " Pts",
-            color = if(rank==2) colorResource(id = R.color.orange)else if( rank == 3) colorResource(
-                id = R.color.blue_light
-            ) else colorResource(
-                id = R.color.yellow
-            ),
-            fontSize = 15.sp
-        )
-        Spacer(modifier = modifier.padding(if (rank == 1) 16.dp else 2.dp))
-        Text(rank.toString(), color = Color.White, fontSize = 32.sp)
+        ) {
+            Text(
+                text = name,
+                color = Color.White,
+                fontSize = 12.sp,
+
+                )
+            Spacer(modifier = modifier.padding(6.dp))
+            Text(
+                text = score.toString() + " Pts",
+                color = if (rank == 2) colorResource(id = R.color.orange) else if (rank == 3) colorResource(
+                    id = R.color.blue_light
+                ) else colorResource(
+                    id = R.color.yellow
+                ),
+                fontSize = 15.sp
+            )
+            Spacer(modifier = modifier.padding(if (rank == 1) 16.dp else 2.dp))
+            Text(rank.toString(), color = Color.White, fontSize = 32.sp)
+        }
     }
 }

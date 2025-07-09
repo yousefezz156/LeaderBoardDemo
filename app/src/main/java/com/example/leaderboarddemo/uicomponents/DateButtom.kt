@@ -24,7 +24,7 @@ fun DateButton(text_button: Int,modifier: Modifier = Modifier) {
     Button(
         modifier = modifier
             .border(
-                1.dp, color = colorResource(id = R.color.Stroke), shape = RoundedCornerShape(12.dp)
+                1.dp, color = colorResource(id = R.color.semi_white), shape = RoundedCornerShape(12.dp)
             )
             .height(48.dp)
             .width(114.dp), shape = RoundedCornerShape(12.dp),

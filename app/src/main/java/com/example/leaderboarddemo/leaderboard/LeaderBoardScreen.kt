@@ -1,5 +1,8 @@
 package com.example.leaderboarddemo.leaderboard
 
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -35,6 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -43,6 +47,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.invalidateGroupsWithKey
 import androidx.compose.runtime.mutableStateOf
@@ -56,6 +61,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.colorspace.WhitePoint
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -75,7 +81,8 @@ import com.example.leaderboarddemo.uicomponents.CircleShapeTop
 import com.example.leaderboarddemo.uicomponents.DateButton
 import com.example.leaderboarddemo.uicomponents.MiddleBar
 import com.example.leaderboarddemo.uicomponents.MockInfo
-import com.example.leaderboarddemo.uicomponents.ModalBottomSheetLB
+import kotlinx.coroutines.delay
+import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -97,6 +104,16 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
     var isDateTextTo by remember{
         mutableStateOf(false)
     }
+
+    var isVisible1 by remember {
+        mutableStateOf(false)
+    }
+    var isVisible2 by remember {
+        mutableStateOf(false)
+    }
+    var isVisible3 by remember {
+        mutableStateOf(false)
+    }
     var dateTextFrom by remember { mutableStateOf("") }
     var dateTextTo by remember { mutableStateOf("") }
 
@@ -104,8 +121,14 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
 
     var showDatePicker by remember { mutableStateOf(false) }
 
+    var context = LocalContext.current
+
 
     var name by remember { mutableStateOf("") }
+
+    AnimatedVisibility(visible = true) {
+
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -191,12 +214,12 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
                         .background(colorResource(id = R.color.blue))
                 )
                 {
-                    MockInfo(name = "Ahmed", score = 1234, rank = 2)
+                    MockInfo(name = "Ahmed", score = 1234, rank = 2, show=isVisible2)
                     Column(
                         horizontalAlignment = Alignment.End,
                         modifier = modifier.fillMaxWidth()
                     ) {
-                        MockInfo(name = "Ahmed", score = 1234, rank = 3)
+                        MockInfo(name = "Ahmed", score = 1234, rank = 3,show = isVisible3)
                     }
                 }
                 Box(
@@ -212,26 +235,31 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
                         )
                 ) {
 
-                    MockInfo(name = "Yousef", score = 1563, rank = 1)
+                    MockInfo(name = "Yousef", score = 1563, rank = 1,show = isVisible1)
                 }
+
+
                 CircleShapeTop(
+                    show = isVisible3,
                     x = 305.dp,
                     y = 110.dp,
                     mockData = mockList[2],
-                    background_color = R.color.blue_light
+                    background_color = R.color.blue_light,
                 )
 
                 CircleShapeTop(
                     x = 167.dp,
                     y = 56.dp,
                     mockData = mockList[0],
-                    background_color = R.color.yellow
+                    background_color = R.color.yellow,
+                    show = isVisible1,
                 )
 
                 CircleShapeTop(
                     50.dp, 110.dp,
                     mockData = mockList[1],
-                    background_color = R.color.orange
+                    background_color = R.color.orange,
+                    show = isVisible2,
                 )
 
 
@@ -270,7 +298,11 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
                                 painter = painterResource(id = R.drawable.rectangle_6),
                                 contentDescription = null
                             )
-                            Text(text = mockList.size.toString(), color = Color.White, fontSize = 10.sp)
+                            Text(
+                                text = mockList.size.toString(),
+                                color = Color.White,
+                                fontSize = 10.sp
+                            )
                         }
                     }
                     Spacer(modifier = modifier.padding(12.dp))
@@ -308,195 +340,25 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
 
         }
 
-        if(showBottomSheet){
-            ModalBottomSheet(
-                onDismissRequest = { showBottomSheet = false },
-                sheetState = bottomSheetState, containerColor = Color.White
-            ) {
-                Column(
-                    modifier = modifier
-                        .background(color = Color.White)
-                ) {
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp, start = 20.dp)
-                    ) {
-                        Text(text = "Name", color = Color.Black, fontSize = 14.sp)
-                        Spacer(modifier = modifier.padding(end = 285.dp))
-                        Text(
-                            text = "Reset",
-                            color = colorResource(id = R.color.purple),
-                            fontSize = 14.sp,
-                            modifier = modifier.clickable { name = "" }
-                        )
+        if (showBottomSheet) {
+            LeaderBoardBottomSheet(
+                name = name,
+                dateTextFrom = dateTextFrom,
+                onDateTextFromChange = { dateTextFrom = it },
+                dateTextTo = dateTextTo,
+                onDateTextToChange = { dateTextTo = it },
+                onDismess = { showBottomSheet = false },
+                onNameChange = { name = it },
+                onShowDatePicker = { FromTextField, show ->
+                    if (FromTextField) {
+                        isDateTextFrom = true
+                        showDatePicker = show
+                    } else {
+                        isDateTextTo = true
+                        showDatePicker = show
                     }
-                    Spacer(modifier = modifier.padding(top = 16.dp))
-
-                    TextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        label = {
-                            Text(
-                                text = stringResource(
-                                    id = R.string.enter_name
-                                )
-                            )
-                        },
-                        trailingIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.search),
-                                contentDescription = null
-                            )
-                        },
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp, end = 20.dp)
-                            .clip(shape = RoundedCornerShape(12.dp)),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = colorResource(id = R.color.Stroke),
-                            unfocusedBorderColor = colorResource(id = R.color.Stroke),
-                            containerColor = colorResource(id = R.color.Stroke)
-
-                        )
-
-                    )
-                    Spacer(modifier = modifier.padding(16.dp))
-                    HorizontalDivider(
-                        color = Color.Gray, modifier = modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp, end = 12.dp)
-                    )
-                    Spacer(modifier = modifier.padding(20.dp))
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.data_range),
-                            color = colorResource(id = R.color.black),
-                            fontSize = 14.sp,
-                        )
-                        Spacer(modifier = modifier.padding(end = 250.dp))
-                        Text(
-                            text = stringResource(id = R.string.reset),
-                            color = colorResource(id = R.color.purple),
-                            fontSize = 14.sp,
-                            modifier = modifier.clickable { dateTextFrom = ""; dateTextTo = "" }
-                        )
-                    }
-                    Spacer(modifier = modifier.padding(16.dp))
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp)
-                    ) {
-                        Column {
-                            Text(text = stringResource(id = R.string.from))
-                            Spacer(modifier = modifier.padding(8.dp))
-                            TextField(value = dateTextFrom,
-                                onValueChange = { dateTextFrom = it },
-                                trailingIcon = {
-                                    IconButton(onClick = {
-                                        isDateTextFrom=true
-                                        showDatePicker=true}) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.calendar),
-                                            contentDescription = null
-                                        )
-                                    }
-                                },
-                                modifier = modifier
-                                    .width(159.dp)
-                                    .height(48.dp)
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .border(
-                                        1.dp,
-                                        color = colorResource(id = R.color.Stroke),
-                                        shape = RoundedCornerShape(12.dp)
-                                    ),
-                                colors = TextFieldDefaults.textFieldColors(
-                                    focusedIndicatorColor = colorResource(id = R.color.Stroke),
-                                    unfocusedIndicatorColor = colorResource(id = R.color.Stroke),
-                                    containerColor = colorResource(id = R.color.Stroke)
-                                ),
-                                textStyle = TextStyle(textAlign = TextAlign.Justify)
-                            )
-                        }
-                        Spacer(modifier = modifier.padding(21.dp))
-                        Column {
-                            Text(text = stringResource(id = R.string.to))
-                            Spacer(modifier = modifier.padding(8.dp))
-                            TextField(value = dateTextTo,
-                                onValueChange = { dateTextTo = it },
-                                trailingIcon = {
-                                    IconButton(onClick = {
-                                        isDateTextTo=true
-                                        showDatePicker=true}) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.calendar),
-                                            contentDescription = null
-                                        )
-                                    }
-                                },
-                                modifier = modifier
-                                    .width(159.dp)
-                                    .height(48.dp)
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .border(
-                                        1.dp,
-                                        color = colorResource(id = R.color.Stroke),
-                                        shape = RoundedCornerShape(12.dp)
-                                    ),
-                                colors = TextFieldDefaults.textFieldColors(
-                                    focusedIndicatorColor = colorResource(id = R.color.Stroke),
-                                    unfocusedIndicatorColor = colorResource(id = R.color.Stroke),
-                                    containerColor = colorResource(id = R.color.Stroke)
-                                ),
-                                textStyle = TextStyle(textAlign = TextAlign.Justify)
-                            )
-                        }
-                    }
-                    Spacer(modifier = modifier.padding(10.dp))
-
-                    Row(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp)
-                    ) {
-                        DateButton(text_button = R.string.today)
-                        Spacer(modifier = modifier.padding(start = 10.dp))
-                        DateButton(text_button = R.string.this_week)
-                        Spacer(modifier = modifier.padding(start = 10.dp))
-                        DateButton(text_button = R.string.this_month)
-                        Spacer(modifier = modifier.padding(start = 10.dp))
-
-                    }
-                    Spacer(modifier = modifier.padding(16.dp))
-                    HorizontalDivider(
-                        color = Color.Gray, modifier = modifier
-                            .fillMaxWidth()
-                            .padding(start = 21.dp, end = 12.dp)
-
-                    )
-                    Spacer(modifier = modifier.padding(16.dp))
-                    Button(
-                        onClick = { showBottomSheet = false },
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 18.dp, bottom = 22.dp),
-                        shape = RoundedCornerShape(6.dp), colors = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(
-                                id = R.color.blue_light
-                            )
-                        )
-                    ) {
-                        Text(text = "Apply", color = Color.White, fontSize = 12.sp)
-                    }
-
                 }
-            }
+            )
         }
 
         if (showDatePicker) {
@@ -505,24 +367,37 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
                 c.timeInMillis =
                     it.selectedDateMillis!! // calender class is used to convert from ms to date
                 var dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.US)
-                if(isDateTextFrom) {
+                if (isDateTextFrom) {
                     dateTextFrom = dateFormatter.format(c.time)
-                }else{
-                    dateTextTo = dateFormatter.format(c.time)
+                } else {
+                    if (isDateTextFrom != null) {
+
+                        dateTextTo = dateFormatter.format(c.time)
+                    }
                 }
 
                 showDatePicker = false
-                isDateTextFrom =false
+                isDateTextFrom = false
                 isDateTextTo = false
-            }, onDismiss = {
-                showDatePicker = false
-                isDateTextFrom =false
-                isDateTextTo = false
-            })
+            }, dateTextTo = dateTextTo,
+                dateTextFrom = dateTextFrom,
+                isDateTextTo = isDateTextTo, onDismiss = {
+                    showDatePicker = false
+                    isDateTextFrom = false
+                    isDateTextTo = false
+                })
         }
 
+    }
 
-
+    }
+    LaunchedEffect(Unit){
+        delay(300)
+        isVisible3= true
+        delay(500)
+        isVisible2=true
+        delay(1000)
+        isVisible1=true
     }
 
 }
@@ -540,9 +415,42 @@ fun lazyColumn(mockList: List<MockData>) {
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerChooser(onConfirm: (DatePickerState) -> Unit, onDismiss: () -> Unit) {
-    val datePickerState =
-        rememberDatePickerState(initialSelectedDateMillis = System.currentTimeMillis())
+fun DatePickerChooser(isDateTextTo:Boolean,dateTextTo:String,dateTextFrom:String, onConfirm: (DatePickerState) -> Unit, onDismiss: () -> Unit) {
+    val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.US)
+
+    val fromDateMillis: Long? = try {
+        val calendar = Calendar.getInstance()
+        calendar.time = dateFormatter.parse(dateTextFrom)!!
+        calendar.timeInMillis
+    } catch (e: Exception) {
+        null
+    }
+
+
+    val toDateMills :Long? = try{
+        val calendar = Calendar.getInstance()
+        calendar.time = dateFormatter.parse(dateTextTo)!!
+        calendar.timeInMillis
+    }catch (e: Exception){
+        null
+    }
+
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = System.currentTimeMillis(),
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return if (isDateTextTo && fromDateMillis != null) {
+                    utcTimeMillis >= fromDateMillis
+                } else if(!isDateTextTo && toDateMills  !=null ){
+                    utcTimeMillis<=toDateMills
+                }else{
+                    true
+                }
+            }
+        }
+    )
+
     DatePickerDialog(onDismissRequest = {},
         confirmButton = {
             TextButton(onClick = { onConfirm(datePickerState) }) {
@@ -561,6 +469,7 @@ fun DatePickerChooser(onConfirm: (DatePickerState) -> Unit, onDismiss: () -> Uni
         }
 
     ) {
+
         DatePicker(state = datePickerState)
     }
 }
