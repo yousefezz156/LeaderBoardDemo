@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -20,17 +21,17 @@ import com.example.leaderboarddemo.ui.theme.backgroundColorsForWhiteText
 
 @Composable
 fun MockInfo(name: String, score: Int, rank: Int, show:Boolean,modifier: Modifier = Modifier) {
-    AnimatedVisibility(visible = show, enter = fadeIn(animationSpec = tween(500, easing = FastOutSlowInEasing))
-    ) {
+//    AnimatedVisibility(visible = show, enter = fadeIn(animationSpec = tween(500, easing = FastOutSlowInEasing))
+//    ) {
 
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.padding(
-                start = if (rank == 2 || rank == 3) 25.dp else 31.dp,
-                top = if (rank == 2 || rank == 3) 16.dp else 31.dp,
-                end = if (rank == 3) 25.dp else 0.dp
-            )
+            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
+//            modifier = modifier.padding(
+//                start = if (rank == 2 || rank == 3) 25.dp else 31.dp,
+//                top = if (rank == 2 || rank == 3) 16.dp else 31.dp,
+//                end = if (rank == 3) 25.dp else 0.dp
+//            )
         ) {
             Text(
                 text = name,
@@ -51,5 +52,5 @@ fun MockInfo(name: String, score: Int, rank: Int, show:Boolean,modifier: Modifie
             Spacer(modifier = modifier.padding(if (rank == 1) 16.dp else 2.dp))
             Text(rank.toString(), color = Color.White, fontSize = 32.sp)
         }
-    }
+
 }

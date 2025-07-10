@@ -86,6 +86,7 @@ import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import java.util.concurrent.Delayed
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,6 +115,9 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
     var isVisible3 by remember {
         mutableStateOf(false)
     }
+    var showKing by remember {
+        mutableStateOf(false)
+    }
     var dateTextFrom by remember { mutableStateOf("") }
     var dateTextTo by remember { mutableStateOf("") }
 
@@ -126,7 +130,20 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
 
     var name by remember { mutableStateOf("") }
 
-    AnimatedVisibility(visible = true) {
+
+    LaunchedEffect(Unit){
+        delay(1000)
+        isVisible3 = true
+        delay(1000)
+        isVisible2 = true
+        delay(1000)
+        isVisible1=true
+        delay(1000)
+        showKing=true
+        }
+
+
+
 
 
     Column(
@@ -214,12 +231,10 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
                         .background(colorResource(id = R.color.blue))
                 )
                 {
-                    MockInfo(name = "Ahmed", score = 1234, rank = 2, show=isVisible2)
                     Column(
                         horizontalAlignment = Alignment.End,
                         modifier = modifier.fillMaxWidth()
                     ) {
-                        MockInfo(name = "Ahmed", score = 1234, rank = 3,show = isVisible3)
                     }
                 }
                 Box(
@@ -235,7 +250,6 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
                         )
                 ) {
 
-                    MockInfo(name = "Yousef", score = 1563, rank = 1,show = isVisible1)
                 }
 
 
@@ -246,21 +260,21 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
                     mockData = mockList[2],
                     background_color = R.color.blue_light,
                 )
-
-                CircleShapeTop(
-                    x = 167.dp,
-                    y = 56.dp,
-                    mockData = mockList[0],
-                    background_color = R.color.yellow,
-                    show = isVisible1,
-                )
-
                 CircleShapeTop(
                     50.dp, 110.dp,
                     mockData = mockList[1],
                     background_color = R.color.orange,
                     show = isVisible2,
                 )
+                CircleShapeTop(
+                    x = 167.dp,
+                    y = 56.dp,
+                    mockData = mockList[0],
+                    background_color = R.color.yellow,
+                    show = isVisible1,
+                    showNum1 = showKing,
+                )
+
 
 
             }
@@ -390,15 +404,9 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
 
     }
 
-    }
-    LaunchedEffect(Unit){
-        delay(300)
-        isVisible3= true
-        delay(500)
-        isVisible2=true
-        delay(1000)
-        isVisible1=true
-    }
+
+
+
 
 }
 
