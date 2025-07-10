@@ -1,4 +1,4 @@
-package com.example.leaderboarddemo.leaderboard
+package com.example.leaderboarddemo.leaderboard.leaderboardmvi
 
 import com.example.leaderboarddemo.mockdata.MockData
 

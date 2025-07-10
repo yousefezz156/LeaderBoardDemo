@@ -1,7 +1,11 @@
 package com.example.leaderboarddemo.uicomponents
 
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -30,8 +34,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asComposeRenderEffect
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -40,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.leaderboarddemo.R
 import com.example.leaderboarddemo.mockdata.MockData
+import com.skydoves.cloudy.Cloudy
 import kotlinx.coroutines.delay
 
 @Composable
@@ -48,36 +57,47 @@ fun CircleShapeTop(
     y: Dp,
     mockData: MockData,
     background_color: Int,
-    show:Boolean,
-    showNum1:Boolean=false,
+    show: Boolean,
+    showNum1: Boolean = false,
     modifier: Modifier = Modifier
 ) {
 
+
     val density = LocalDensity.current
 
-    var shouldAnimate by remember { mutableStateOf(false) }
-
-    // Trigger animation after first composition
-    LaunchedEffect(show) {
-        if (show) {
-            shouldAnimate = true
-        }
+    var showB by remember {
+        mutableStateOf(false)
     }
 
-        Box {
-            AnimatedVisibility(
-                visible = shouldAnimate,
-                enter = slideInVertically {
-                    // Slide in from 40 dp from the top.
-                    with(density) { -80.dp.roundToPx() }
-                } + expandVertically(
-                    // Expand from the top.
-                    expandFrom = Alignment.Top
-                ) + fadeIn(
-                    // Fade in with the initial alpha of 0.3f.
-                    initialAlpha = 0.4f,
-                ), modifier = modifier.offset(x, y)){
-                Column (horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center){
+    LaunchedEffect(Unit) {
+        showB = true
+        delay(100) // Match the blur animation duration
+        showB=false
+    }
+
+
+
+
+
+
+
+    Box {
+
+        AnimatedVisibility(
+            visible = show,
+            enter = fadeIn(animationSpec = tween(1000, 1000)) +
+                    scaleIn(initialScale = 0.8f, animationSpec = tween(1000, 1000)) +
+                    slideInVertically { with(density) { -80.dp.roundToPx() } },
+            exit = fadeOut(animationSpec = tween(500)),
+            modifier = modifier
+                .offset(x, y)
+
+        ) {
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
 
 
                     Box(
@@ -107,38 +127,40 @@ fun CircleShapeTop(
                         Text(text = two_words, color = Color.White, fontSize = 24.sp)
 
                     }
-                    Spacer(modifier = modifier.padding(top=if(mockData.rank == 1)10.dp else 5.dp))
+                    Spacer(modifier = modifier.padding(top = if (mockData.rank == 1) 10.dp else 5.dp))
                     MockInfo(name = "Yousef", score = 1234, rank = mockData.rank, show = show)
                 }
-            if (mockData.rank == 1) {
-                AnimatedVisibility(
-                    visible = showNum1,
-                    enter = slideInVertically {
-                        // Slide in from 40 dp from the top.
-                        with(density) { -40.dp.roundToPx() }
-                    } + expandVertically(
-                        // Expand from the top.
-                        expandFrom = Alignment.Top
-                    ) + fadeIn(
-                        // Fade in with the initial alpha of 0.3f.
-                        initialAlpha = 0.4f,
-                    ), modifier = modifier.offset(x = 20.dp, y = (-30).dp)) {
-                    Box(
-                        modifier = modifier
-                            .width(34.dp)
-                            .height(26.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.group_1_1_),
-                            contentDescription = null,
+                if (mockData.rank == 1) {
+                    AnimatedVisibility(
+                        visible = showNum1,
+                        enter = slideInVertically {
+                            // Slide in from 40 dp from the top.
+                            with(density) { -40.dp.roundToPx() }
+                        } + expandVertically(
+                            // Expand from the top.
+                            expandFrom = Alignment.Top
+                        ) + fadeIn(
+                            // Fade in with the initial alpha of 0.3f.
+                            initialAlpha = 0.4f,
+                        ), modifier = modifier.offset(x = 20.dp, y = (-30).dp)) {
+                        Box(
                             modifier = modifier
                                 .width(34.dp)
                                 .height(26.dp)
-                        )
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.group_1_1_),
+                                contentDescription = null,
+                                modifier = modifier
+                                    .width(34.dp)
+                                    .height(26.dp)
+                            )
+                        }
                     }
                 }
             }
-        }
+
     }
 
 }
+

@@ -48,8 +48,11 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.invalidateGroupsWithKey
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -72,7 +75,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.leaderboarddemo.R
+import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoardViewModel
 import com.example.leaderboarddemo.mockdata.MockData
 import com.example.leaderboarddemo.mockdata.MockList
 import com.example.leaderboarddemo.uicomponents.CalendatTextfilled
@@ -95,7 +100,7 @@ import java.util.concurrent.Delayed
  avoid recreating view model (if you will use the same LeaderBoardViewModel in more than one screen)
  */
 
-fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifecycle.viewmodel.compose.viewModel(), mockList: List<MockData>, modifier: Modifier = Modifier) {
+fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), mockList: List<MockData>, modifier: Modifier = Modifier) {
     var showBottomSheet by remember {
         mutableStateOf(false)
     }
@@ -120,30 +125,9 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
     }
     var dateTextFrom by remember { mutableStateOf("") }
     var dateTextTo by remember { mutableStateOf("") }
-
-    var bottomSheetState = rememberModalBottomSheetState()
-
     var showDatePicker by remember { mutableStateOf(false) }
-
-    var context = LocalContext.current
-
-
     var name by remember { mutableStateOf("") }
-
-
-    LaunchedEffect(Unit){
-        delay(1000)
-        isVisible3 = true
-        delay(1000)
-        isVisible2 = true
-        delay(1000)
-        isVisible1=true
-        delay(1000)
-        showKing=true
-        }
-
-
-
+    var animationStarted by remember { mutableStateOf(false) }
 
 
     Column(
@@ -343,13 +327,13 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
 
             }
             HorizontalDivider(
-                color = Color.Gray, modifier = modifier
+                color = Color.LightGray, modifier = modifier
                     .fillMaxWidth()
                     .padding(start = 21.dp, end = 12.dp)
             )
 
             Spacer(modifier = modifier.padding(top = 16.dp))
-            lazyColumn(mockList = mockList)
+            lazyColumn(viewModel = leaderBoardViewModel)
 
 
         }
@@ -405,87 +389,41 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel= androidx.lifec
     }
 
 
-
-
-
-}
-
-@Composable
-fun lazyColumn(mockList: List<MockData>) {
-    LazyColumn {
-        items(mockList) { item ->
-            if (item.rank > 3)
-                CardView(mockData = item)
-
+        LaunchedEffect(Unit) {
+            animationStarted = true
+            delay(1000)
+            isVisible3 = true
+            delay(1000)
+            isVisible2 = true
+            delay(1000)
+            isVisible1 = true
+            delay(1000)
+            showKing = true
         }
-
     }
-}
-@OptIn(ExperimentalMaterial3Api::class)
+
+
+
+
 @Composable
-fun DatePickerChooser(isDateTextTo:Boolean,dateTextTo:String,dateTextFrom:String, onConfirm: (DatePickerState) -> Unit, onDismiss: () -> Unit) {
-    val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.US)
-
-    val fromDateMillis: Long? = try {
-        val calendar = Calendar.getInstance()
-        calendar.time = dateFormatter.parse(dateTextFrom)!!
-        calendar.timeInMillis
-    } catch (e: Exception) {
-        null
-    }
-
-
-    val toDateMills :Long? = try{
-        val calendar = Calendar.getInstance()
-        calendar.time = dateFormatter.parse(dateTextTo)!!
-        calendar.timeInMillis
-    }catch (e: Exception){
-        null
-    }
-
-
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = System.currentTimeMillis(),
-        selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return if (isDateTextTo && fromDateMillis != null) {
-                    utcTimeMillis >= fromDateMillis
-                } else if(!isDateTextTo && toDateMills  !=null ){
-                    utcTimeMillis<=toDateMills
-                }else{
-                    true
+fun lazyColumn(viewModel: LeaderBoardViewModel) {
+    val list by viewModel.state.collectAsState()
+    LazyColumn {
+        items(list.list) { item ->
+            if(item.rank>3) {
+                key(item.rank) {
+                    CardView(mockData = item)
                 }
             }
         }
-    )
 
-    DatePickerDialog(onDismissRequest = {},
-        confirmButton = {
-            TextButton(onClick = { onConfirm(datePickerState) }) {
-                Text(text = "Ok")
-
-            }
-
-
-        },
-        dismissButton = {
-
-            TextButton(onClick = { onDismiss() }) {
-                Text(text = "Cancel")
-
-            }
-        }
-
-    ) {
-
-        DatePicker(state = datePickerState)
     }
 }
+
 
 
 @Preview(showBackground = true)
 @Composable
 fun LeaderBoardPreview() {
     LeaderBoardScreen(mockList = MockList().getList())
-
 }

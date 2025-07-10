@@ -5,14 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +15,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -41,14 +35,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.leaderboarddemo.leaderboard.LeaderBoardScreen
+import androidx.lifecycle.ViewModelProvider
+import com.example.leaderboarddemo.approutes.AppNav
+import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoardViewModel
+import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoardViewModelFactory
+import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoarderRepository
 import com.example.leaderboarddemo.mockdata.MockList
 import com.example.leaderboarddemo.ui.theme.LeaderBoardDemoTheme
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
+    private lateinit var viewModel: LeaderBoardViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val leaderBoarderRepository = LeaderBoarderRepository(mockList = MockList())
+        val factory = LeaderBoardViewModelFactory(leaderBoarderRepository)
+
+        // Get the ViewModel
+        viewModel = ViewModelProvider(this, factory)[LeaderBoardViewModel::class.java]
         enableEdgeToEdge()
         setContent {
             LeaderBoardDemoTheme {
@@ -58,7 +62,8 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .fillMaxSize()
                     ) {
-                         LeaderBoardScreen(mockList = MockList().getList())
+                         AppNav(viewModel = viewModel)
+
                         //testAnimatedVisibility()
                     }
                 }

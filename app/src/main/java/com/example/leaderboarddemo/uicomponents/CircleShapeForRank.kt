@@ -29,7 +29,7 @@ fun CircleShapeForRank(mockData: MockData, modifier: Modifier = Modifier) {
             .size(42.dp)
             .clip(shape = CircleShape)
             .background(
-                backgroundColorsForWhiteText.random()
+                color = mockData.colors
             ), contentAlignment = Alignment.Center
     ) {
         Text(text = two_words, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
