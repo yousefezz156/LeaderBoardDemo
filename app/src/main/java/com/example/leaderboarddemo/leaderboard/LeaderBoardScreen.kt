@@ -127,7 +127,6 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
     var dateTextTo by remember { mutableStateOf("") }
     var showDatePicker by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
-    var animationStarted by remember { mutableStateOf(false) }
 
 
     Column(
@@ -251,7 +250,7 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
                     show = isVisible2,
                 )
                 CircleShapeTop(
-                    x = 167.dp,
+                    x = 170.dp,
                     y = 56.dp,
                     mockData = mockList[0],
                     background_color = R.color.yellow,
@@ -390,8 +389,7 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
 
 
         LaunchedEffect(Unit) {
-            animationStarted = true
-            delay(1000)
+            delay(500)
             isVisible3 = true
             delay(1000)
             isVisible2 = true
