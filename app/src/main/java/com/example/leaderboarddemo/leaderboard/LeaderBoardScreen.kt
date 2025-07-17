@@ -1,19 +1,16 @@
 package com.example.leaderboarddemo.leaderboard
 
-import android.content.Context
-import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.BorderStroke
+
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,34 +21,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerState
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.invalidateGroupsWithKey
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,52 +38,50 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.colorspace.WhitePoint
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.leaderboarddemo.R
 import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoardViewModel
 import com.example.leaderboarddemo.mockdata.MockData
 import com.example.leaderboarddemo.mockdata.MockList
-import com.example.leaderboarddemo.uicomponents.CalendatTextfilled
 import com.example.leaderboarddemo.uicomponents.CardView
 import com.example.leaderboarddemo.uicomponents.CircleShapeTop
-import com.example.leaderboarddemo.uicomponents.DateButton
 import com.example.leaderboarddemo.uicomponents.MiddleBar
-import com.example.leaderboarddemo.uicomponents.MockInfo
 import kotlinx.coroutines.delay
-import java.sql.Time
+import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
-import java.util.concurrent.Delayed
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-/*Note if you will add the navigation class then remove =viewModel() from the parameter then add it in the nav class to
- avoid recreating view model (if you will use the same LeaderBoardViewModel in more than one screen)
- */
+        /*Note if you will add the navigation class then remove =viewModel() from the parameter then add it in the nav class to
+         avoid recreating view model (if you will use the same LeaderBoardViewModel in more than one screen)
+         */
 
-fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), mockList: List<MockData>, modifier: Modifier = Modifier) {
-    var showBottomSheet by remember {
+fun LeaderBoardScreen(
+    leaderBoardViewModel: LeaderBoardViewModel,
+    mockList: List<MockData>,
+    modifier: Modifier = Modifier
+) {
+    var showDialog by remember {
         mutableStateOf(false)
     }
-    var isDateTextFrom by remember{
+    var isDateTextFrom by remember {
         mutableStateOf(false)
     }
-    var isDateTextTo by remember{
+    var isDateTextTo by remember {
         mutableStateOf(false)
     }
 
@@ -123,8 +97,13 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
     var showKing by remember {
         mutableStateOf(false)
     }
-    var dateTextFrom by remember { mutableStateOf("") }
-    var dateTextTo by remember { mutableStateOf("") }
+
+
+    val currentDate = LocalDate.now()
+
+    val formater = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    var dateTextFrom by remember { mutableStateOf("${currentDate.format(formater)}") }
+    var dateTextTo by remember { mutableStateOf("${currentDate.format(formater)}") }
     var showDatePicker by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
 
@@ -149,58 +128,6 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
                 .fillMaxWidth()
 
         ) {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Spacer(modifier = modifier.padding(start = 16.dp))
-                Image(
-                    painter = painterResource(R.drawable.frame),
-                    contentDescription = null,
-                    modifier = modifier.size(48.dp)
-                )
-                Spacer(modifier = modifier.padding(start = 16.dp))
-                Column {
-                    Text(
-                        text = stringResource(R.string.hello),
-                        color = colorResource(R.color.white)
-                    )
-                    Spacer(modifier = modifier.padding(top = 8.dp))
-                    Text(
-                        text = stringResource(R.string.welcome_challenge),
-                        color = colorResource(R.color.white)
-                    )
-
-                }
-                Row(horizontalArrangement = Arrangement.End, modifier = modifier.fillMaxWidth()) {
-                    Box(
-                        modifier = modifier
-                            .padding(end = 16.dp)
-                            .size(40.dp)
-                            .clip(
-                                RoundedCornerShape(8.dp)
-                            )
-                            .background(color = colorResource(R.color.white))
-
-                    ) {
-
-                        Image(
-                            painter = painterResource(R.drawable.gift),
-                            contentDescription = null,
-                            modifier = modifier
-                                .size(20.dp)
-                                .align(Alignment.Center)
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = modifier.padding(top = 16.dp))
-            Box() {
-                MiddleBar()
-            }
-
 
 
             Box {
@@ -213,13 +140,6 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
                         .clip(shape = RoundedCornerShape(12.dp))
                         .background(colorResource(id = R.color.blue))
                 )
-                {
-                    Column(
-                        horizontalAlignment = Alignment.End,
-                        modifier = modifier.fillMaxWidth()
-                    ) {
-                    }
-                }
                 Box(
                     modifier = modifier
                         .offset(145.dp, 104.dp)
@@ -231,9 +151,7 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
                                 id = R.color.blue_light
                             )
                         )
-                ) {
-
-                }
+                )
 
 
                 CircleShapeTop(
@@ -259,7 +177,6 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
                 )
 
 
-
             }
         }
 
@@ -282,6 +199,10 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
                     )
                     Spacer(modifier = modifier.padding(4.dp))
                     Row() {
+                        Text("(",
+                            fontSize = 16.sp,
+                            color = colorResource(id = R.color.blue_light)
+                        )
                         Text(
                             stringResource(id = R.string.myrank),
                             fontSize = 16.sp,
@@ -301,6 +222,10 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
                                 fontSize = 10.sp
                             )
                         }
+                        Text(")",
+                            fontSize = 16.sp,
+                            color = colorResource(id = R.color.blue_light)
+                        )
                     }
                     Spacer(modifier = modifier.padding(12.dp))
                 }
@@ -311,16 +236,21 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
                         .padding(top = 25.dp, end = 25.dp)
                         .fillMaxWidth()
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.general),
-                        contentDescription = null,
-                        modifier = modifier
-                            .height(17.dp)
-                            .width(14.dp)
-                            .clickable { showBottomSheet = true }
-                    )
-                    Spacer(modifier = modifier.padding(8.dp))
-                    Text(text = stringResource(id = R.string.filter))
+                    Row(
+                        modifier = modifier.clickable { showDialog = true },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.general),
+                            contentDescription = null,
+                            modifier = modifier
+                                .height(17.dp)
+                                .width(14.dp)
+                        )
+                        Spacer(modifier = modifier.padding(8.dp))
+                        Text(text = stringResource(id = R.string.filter))
+                    }
+
                 }
 
 
@@ -332,20 +262,20 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
             )
 
             Spacer(modifier = modifier.padding(top = 16.dp))
-            lazyColumn(viewModel = leaderBoardViewModel)
+            LazyColumn(viewModel = leaderBoardViewModel)
 
 
         }
 
-        if (showBottomSheet) {
-            LeaderBoardBottomSheet(
+        if (showDialog) {
+            LeaderBoarderDialog(
                 name = name,
                 dateTextFrom = dateTextFrom,
                 onDateTextFromChange = { dateTextFrom = it },
                 dateTextTo = dateTextTo,
                 onDateTextToChange = { dateTextTo = it },
-                onDismess = { showBottomSheet = false },
-                onNameChange = { name = it },
+                onDismess = { showDialog = false },
+                onNameChange = { name = it }, show = showDialog,
                 onShowDatePicker = { FromTextField, show ->
                     if (FromTextField) {
                         isDateTextFrom = true
@@ -360,10 +290,10 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
 
         if (showDatePicker) {
             DatePickerChooser(onConfirm = {
-                var c = Calendar.getInstance()
+                val c = Calendar.getInstance()
                 c.timeInMillis =
                     it.selectedDateMillis!! // calender class is used to convert from ms to date
-                var dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.US)
                 if (isDateTextFrom) {
                     dateTextFrom = dateFormatter.format(c.time)
                 } else {
@@ -388,27 +318,25 @@ fun LeaderBoardScreen(leaderBoardViewModel: LeaderBoardViewModel = viewModel(), 
     }
 
 
-        LaunchedEffect(Unit) {
-            delay(500)
-            isVisible3 = true
-            delay(1000)
-            isVisible2 = true
-            delay(1000)
-            isVisible1 = true
-            delay(1000)
-            showKing = true
-        }
+    LaunchedEffect(Unit) {
+        delay(500)
+        isVisible3 = true
+        delay(1000)
+        isVisible2 = true
+        delay(1000)
+        isVisible1 = true
+        delay(1000)
+        showKing = true
     }
-
-
+}
 
 
 @Composable
-fun lazyColumn(viewModel: LeaderBoardViewModel) {
+fun LazyColumn(viewModel: LeaderBoardViewModel) {
     val list by viewModel.state.collectAsState()
     LazyColumn {
         items(list.list) { item ->
-            if(item.rank>3) {
+            if (item.rank > 3) {
                 key(item.rank) {
                     CardView(mockData = item)
                 }
@@ -419,9 +347,9 @@ fun lazyColumn(viewModel: LeaderBoardViewModel) {
 }
 
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun LeaderBoardPreview() {
-    LeaderBoardScreen(mockList = MockList().getList())
+    LeaderBoardScreen(viewModel(), mockList = MockList().getList())
 }

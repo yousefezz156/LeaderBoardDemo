@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.example.leaderboarddemo.approutes.AppNav
 import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoardViewModel
-import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoardViewModelFactory
+//import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoardViewModelFactory
 import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoarderRepository
 import com.example.leaderboarddemo.mockdata.MockList
 import com.example.leaderboarddemo.ui.theme.LeaderBoardDemoTheme
@@ -48,11 +48,11 @@ class MainActivity : ComponentActivity() {
     private lateinit var viewModel: LeaderBoardViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val leaderBoarderRepository = LeaderBoarderRepository(mockList = MockList())
-        val factory = LeaderBoardViewModelFactory(leaderBoarderRepository)
-
-        // Get the ViewModel
-        viewModel = ViewModelProvider(this, factory)[LeaderBoardViewModel::class.java]
+//        val leaderBoarderRepository = LeaderBoarderRepository(mockList = MockList())
+//        val factory = LeaderBoardViewModelFactory(leaderBoarderRepository)
+//
+//        // Get the ViewModel
+//        viewModel = ViewModelProvider(this, factory)[LeaderBoardViewModel::class.java]
         enableEdgeToEdge()
         setContent {
             LeaderBoardDemoTheme {
@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .fillMaxSize()
                     ) {
-                         AppNav(viewModel = viewModel)
+                         AppNav()
 
                         //testAnimatedVisibility()
                     }

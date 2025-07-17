@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.leaderboarddemo.R
 import com.example.leaderboarddemo.mockdata.MockData
+import com.example.leaderboarddemo.ui.theme.backgroundColorsForWhiteText
 
 @Composable
 fun CardView(mockData: MockData, modifier: Modifier = Modifier) {
@@ -29,11 +30,10 @@ fun CardView(mockData: MockData, modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(start = 21.dp, end = 12.dp), verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(contentAlignment = Alignment.Center, modifier = modifier.width(20.dp)){
+            Box(contentAlignment = Alignment.Center, modifier = modifier.width(30.dp)){
                 Text(text = mockData.rank.toString(), color = Color.Black)
-
             }
-            Spacer(modifier = modifier.padding(10.dp))
+            Spacer(modifier = modifier.padding(4.dp))
             CircleShapeForRank(mockData)
             Spacer(modifier = modifier.padding(12.dp))
             Text(text = mockData.first_name, color = Color.Black)
@@ -45,12 +45,16 @@ fun CardView(mockData: MockData, modifier: Modifier = Modifier) {
             }
         }
 
-        Divider(
-            color = colorResource(id = R.color.grey),
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(start = 21.dp, end = 12.dp, top = 25.dp, bottom = 12.dp)
-        )
+        if(mockData.rank !=10) {
+            Divider(
+                color = colorResource(id = R.color.grey),
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = 21.dp, end = 12.dp, top = 25.dp, bottom = 12.dp)
+            )
+        }else{
+            Spacer(modifier = modifier.padding(bottom = 12.dp))
+        }
     }
 
 }

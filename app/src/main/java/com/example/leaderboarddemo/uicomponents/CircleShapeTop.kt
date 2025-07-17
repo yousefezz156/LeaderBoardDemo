@@ -76,25 +76,18 @@ fun CircleShapeTop(
         mutableStateOf(true)
     }
 
-    LaunchedEffect(Unit) {
-        delay(500) // Match the blur animation duration
-        showBlur = false
-    }
+
 
 
     val alphaAnim by animateFloatAsState(
         targetValue = if (show) 1f else 0f, // Animate to 1f when shown
         animationSpec = tween(
-            durationMillis = 3000, // Match your scaleIn duration
+            durationMillis = 1000, // Match your scaleIn duration
             easing = FastOutSlowInEasing
         ), label = "alphaAnimation"
     )
 
-    val blurAnim by animateDpAsState(
-        targetValue = if (show) 0.dp else 20.dp,
-        animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing),
-        label = "blur"
-    )
+
 
 
 
@@ -103,8 +96,8 @@ fun CircleShapeTop(
 
     AnimatedVisibility(
         visible = show,
-        enter = fadeIn(animationSpec = tween(1000, 500))
-                + scaleIn(initialScale = 0.8f, animationSpec = tween(1000, 500)),
+        enter = fadeIn(animationSpec = tween(800, 0))
+                + scaleIn(initialScale = 0.8f, animationSpec = tween(800, 0)),
         exit = fadeOut(animationSpec = tween(500)),
         modifier = modifier
             .offset(x, y)
@@ -116,7 +109,7 @@ fun CircleShapeTop(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center, modifier = modifier
-                    .alpha(alphaAnim).blur(blurAnim)
+                    .alpha(alphaAnim)
             ) {
 
 

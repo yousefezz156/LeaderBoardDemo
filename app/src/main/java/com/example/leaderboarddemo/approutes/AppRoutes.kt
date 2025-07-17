@@ -16,12 +16,13 @@ object AppRoutes {
 }
 
 @Composable
-fun AppNav(viewModel: LeaderBoardViewModel) {
+fun AppNav() {
     val navController = rememberNavController()
+    val leaderBoardViewModel: LeaderBoardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     NavHost(navController = navController, startDestination = AppRoutes.LEADERBOARD) {
         composable(route = AppRoutes.LEADERBOARD) {
             LeaderBoardScreen(
-                leaderBoardViewModel = viewModel,
+                leaderBoardViewModel = leaderBoardViewModel,
                 mockList = MockList().getList()
             )
         }
