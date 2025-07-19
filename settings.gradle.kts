@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "LeaderBoardDemo"
 include(":app")
+include(":leaderboarderscreenmodule")
 include(":leaderboardscreenmodule")
