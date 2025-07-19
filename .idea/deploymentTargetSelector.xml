@@ -8,6 +8,9 @@
       <SelectionState runConfigName="LeaderBoardPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="leaderboardscreenmodule">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
