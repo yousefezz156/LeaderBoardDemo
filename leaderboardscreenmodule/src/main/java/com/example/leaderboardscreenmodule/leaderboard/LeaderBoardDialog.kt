@@ -81,7 +81,7 @@ fun LeaderBoarderDialog(
                         Text(
                             text = "Reset",
                             color = colorResource(id = R.color.purple),
-                            fontSize = 14.sp,
+                            fontSize = 12.sp,
                             modifier = modifier.clickable { onNameChange("") }
                         )
                     }
