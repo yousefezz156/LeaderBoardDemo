@@ -1,9 +1,11 @@
 package com.example.leaderboardscreenmodule
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -40,6 +42,7 @@ import kotlinx.coroutines.delay
 
 internal class MainActivity : ComponentActivity() {
     private lateinit var viewModel: com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        val leaderBoarderRepository = LeaderBoarderRepository(mockList = MockList())
@@ -67,7 +70,7 @@ internal class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun testAnimatedVisibility(modifier: Modifier = Modifier) {
+internal fun testAnimatedVisibility(modifier: Modifier = Modifier) {
 
 
     var changeState by remember { mutableStateOf(false) }
