@@ -67,6 +67,7 @@ fun LeaderBoarderDialog(
             Card(shape = RoundedCornerShape(16.dp)) {
 
 
+
                 Column(
                     modifier = modifier
                         .background(color = Color.White)
