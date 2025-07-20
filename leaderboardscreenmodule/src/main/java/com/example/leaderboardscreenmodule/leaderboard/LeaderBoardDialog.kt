@@ -74,6 +74,7 @@ fun LeaderBoarderDialog(
                     Row(
                         modifier = modifier
                             .fillMaxWidth()
+
                             .padding(top = 16.dp, start = 20.dp, end = 19.dp)
                     ) {
                         Text(text = "Name", color = Color.Black, fontSize = 14.sp)
