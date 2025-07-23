@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.mockdata
+package com.example.leaderboardscreenmodule.leaderboard.mockdata
 
 data class MockData(
     var first_name:String,
@@ -6,5 +6,5 @@ data class MockData(
     var score: Int,
     var rank: Int,
     var date:String?= null,
-    var colors:androidx.compose.ui.graphics.Color// for filtering
+    var colors:androidx.compose.ui.graphics.Color
 )

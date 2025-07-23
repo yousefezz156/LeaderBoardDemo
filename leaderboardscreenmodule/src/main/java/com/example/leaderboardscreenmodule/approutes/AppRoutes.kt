@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.leaderboardscreenmodule.leaderboard.LeaderBoardScreen
 import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
-import com.example.leaderboardscreenmodule.mockdata.MockList
+import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
 
 object AppRoutes {
 

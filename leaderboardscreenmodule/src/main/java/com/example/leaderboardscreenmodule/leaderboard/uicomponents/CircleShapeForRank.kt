@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.uicomponents
+package com.example.leaderboardscreenmodule.leaderboard.uicomponents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,11 +13,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.leaderboardscreenmodule.mockdata.MockData
+import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText
 
 @Composable
-fun CircleShapeForRank(mockData: com.example.leaderboardscreenmodule.mockdata.MockData, modifier: Modifier = Modifier) {
+fun CircleShapeForRank(mockData: MockData, modifier: Modifier = Modifier) {
 
     val first_name = mockData.first_name.toCharArray()[0]
     val last_name = mockData.last_name.toCharArray()[0]

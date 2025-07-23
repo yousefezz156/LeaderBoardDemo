@@ -34,7 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.leaderboardscreenmodule.R
-import com.example.leaderboardscreenmodule.uicomponents.DateButton
+import com.example.leaderboardscreenmodule.leaderboard.uicomponents.DateButton
 
 
 @OptIn(ExperimentalMaterial3Api::class)

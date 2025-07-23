@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.mockdata
+package com.example.leaderboardscreenmodule.leaderboard.mockdata
 
 import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText
 

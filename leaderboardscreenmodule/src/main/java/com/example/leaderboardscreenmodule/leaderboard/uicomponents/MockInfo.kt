@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.uicomponents
+package com.example.leaderboardscreenmodule.leaderboard.uicomponents
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing

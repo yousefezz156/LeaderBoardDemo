@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.uicomponents
+package com.example.leaderboardscreenmodule.leaderboard.uicomponents
 
 import android.graphics.RenderEffect
 import android.graphics.Shader
@@ -54,14 +54,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.leaderboardscreenmodule.R
-import com.example.leaderboardscreenmodule.mockdata.MockData
+import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import kotlinx.coroutines.delay
 
 @Composable
 fun CircleShapeTop(
     x: Dp,
     y: Dp,
-    mockData: com.example.leaderboardscreenmodule.mockdata.MockData,
+    mockData: MockData,
     background_color: Int,
     show: Boolean,
     showNum1: Boolean = false,

@@ -48,11 +48,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.leaderboardscreenmodule.R
 import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
-import com.example.leaderboardscreenmodule.mockdata.MockData
-import com.example.leaderboardscreenmodule.mockdata.MockList
-import com.example.leaderboardscreenmodule.uicomponents.CardView
-import com.example.leaderboardscreenmodule.uicomponents.CircleShapeTop
-import com.example.leaderboardscreenmodule.uicomponents.MiddleBar
+import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
+import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
+import com.example.leaderboardscreenmodule.leaderboard.uicomponents.CardView
+import com.example.leaderboardscreenmodule.leaderboard.uicomponents.CircleShapeTop
+import com.example.leaderboardscreenmodule.leaderboard.uicomponents.MiddleBar
 import kotlinx.coroutines.delay
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat

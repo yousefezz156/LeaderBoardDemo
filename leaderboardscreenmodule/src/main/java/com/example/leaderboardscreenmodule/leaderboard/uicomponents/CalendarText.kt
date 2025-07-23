@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.uicomponents
+package com.example.leaderboardscreenmodule.leaderboard.uicomponents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

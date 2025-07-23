@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.uicomponents
+package com.example.leaderboardscreenmodule.leaderboard.uicomponents
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,11 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.leaderboardscreenmodule.R
-import com.example.leaderboardscreenmodule.mockdata.MockData
+import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText
 
 @Composable
-fun CardView(mockData: com.example.leaderboardscreenmodule.mockdata.MockData, modifier: Modifier = Modifier) {
+fun CardView(mockData: MockData, modifier: Modifier = Modifier) {
     Column() {
         Row(
             modifier = modifier

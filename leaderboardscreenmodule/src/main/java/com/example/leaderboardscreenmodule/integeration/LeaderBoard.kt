@@ -9,9 +9,17 @@ import androidx.compose.ui.Modifier
 import com.example.leaderboardscreenmodule.MainActivity
 import com.example.leaderboardscreenmodule.approutes.AppNav
 object LeaderBoard {
-    fun start(context : Context) {
-        context.startActivity(Intent(context, MainActivity::class.java))
-        }
+    var sdkMidlayer: SdkMidlayer?=null
 
+    //initSDK
+    fun initSdk(context : Context, sdkConfig: SdkConfig, sdkData: SdkData): LeaderBoard {
+        sdkMidlayer = SdkMidlayer(sdkData,sdkConfig,context)
+        return this
+    }
+
+    //openSDK
+    fun openSdk(context: Context){
+        sdkMidlayer?.start(context)
+    }
 }
 
