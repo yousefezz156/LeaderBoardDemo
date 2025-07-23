@@ -6,6 +6,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.cachedIn
+import com.example.leaderboardscreenmodule.DumyApi.DataApiServices
+import com.example.leaderboardscreenmodule.DumyApi.DummyDataUseCase
 import com.example.leaderboardscreenmodule.leaderboard.domain.LeaderBoardUseCase
 import com.example.leaderboardscreenmodule.leaderboard.domain.RankDataSource
 import com.example.leaderboardscreenmodule.leaderboard.domain.RankDetailsApi
@@ -19,11 +21,13 @@ import kotlinx.coroutines.launch
 
 class LeaderBoardViewModel(
     val rankDetailsApi: RankDetailsApi,
+    val dataApiServices: DataApiServices,
     val leaderBoarderRepository: LeaderBoarderRepository = LeaderBoarderRepository(
-        mockList = MockList(), rankDetailsApi = rankDetailsApi
+        mockList = MockList(), rankDetailsApi = rankDetailsApi, dummyDataApi = dataApiServices
     ),
     val leaderBoardUseCase: LeaderBoardUseCase = LeaderBoardUseCase(leaderBoarderRepository),
-    val rankDataSource: RankDataSource = RankDataSource(leaderBoardUseCase)
+    val dummyDataUseCase: DummyDataUseCase= DummyDataUseCase(leaderBoarderRepository),
+    val rankDataSource: RankDataSource = RankDataSource(dummyDataUseCase)
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(LeaderBoardState())
@@ -38,7 +42,7 @@ class LeaderBoardViewModel(
             .flow.cachedIn(viewModelScope) // here we convert it to flow so the UI can read it
 
     private fun setDataSource(): RankDataSource {
-        val dataSource = RankDataSource(leaderBoardUseCase)
+        val dataSource = RankDataSource(dummyDataUseCase)
         return dataSource
     }
 

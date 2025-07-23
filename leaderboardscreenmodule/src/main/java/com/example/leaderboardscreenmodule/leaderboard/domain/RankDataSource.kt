@@ -8,7 +8,7 @@ import com.example.leaderboardscreenmodule.leaderboard.entity.RankUiModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 
-class RankDataSource(val useCase: LeaderBoardUseCase, val dummyUseCase: DummyDataUseCase): PagingSource<Int, DummyDataUiModel>() {
+class RankDataSource(/*val useCase: LeaderBoardUseCase*/ val dummyUseCase: DummyDataUseCase): PagingSource<Int, DummyDataUiModel>() {
 
     private val channel: Channel<Unit> = Channel(1, BufferOverflow.DROP_LATEST)
     override fun getRefreshKey(state: PagingState<Int, DummyDataUiModel>): Int? {
