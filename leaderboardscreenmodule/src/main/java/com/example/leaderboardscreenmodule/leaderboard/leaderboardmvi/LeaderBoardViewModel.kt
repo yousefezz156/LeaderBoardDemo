@@ -20,10 +20,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LeaderBoardViewModel(
-    val rankDetailsApi: RankDetailsApi,
-    val dataApiServices: DataApiServices,
     val leaderBoarderRepository: LeaderBoarderRepository = LeaderBoarderRepository(
-        mockList = MockList(), rankDetailsApi = rankDetailsApi, dummyDataApi = dataApiServices
+        mockList = MockList()
     ),
     val leaderBoardUseCase: LeaderBoardUseCase = LeaderBoardUseCase(leaderBoarderRepository),
     val dummyDataUseCase: DummyDataUseCase= DummyDataUseCase(leaderBoarderRepository),

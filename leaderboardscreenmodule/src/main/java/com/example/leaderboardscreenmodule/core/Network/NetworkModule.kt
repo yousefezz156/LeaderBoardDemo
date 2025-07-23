@@ -26,7 +26,7 @@ object NetworkModule {
     }
 
     //one function for all the APIs services
-    inline private fun <reified T> provideApi(
+    internal inline fun <reified T> provideApi(
         retrofit: Retrofit = provideRetrofit(
             provideOkHttpClient(
                 if (sdkData.userData != null) HeaderInterceptor(
@@ -41,7 +41,7 @@ object NetworkModule {
     }
 
 
-    private fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+     internal fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder().apply {
             addConverterFactory(GsonConverterFactory.create())
             addCallAdapterFactory(CoroutineCallAdapterFactory())
@@ -52,7 +52,7 @@ object NetworkModule {
         }.build()
     }
 
-    private fun provideOkHttpClient(headerInterceptor: HeaderInterceptor): OkHttpClient {
+     internal fun provideOkHttpClient(headerInterceptor: HeaderInterceptor): OkHttpClient {
         return OkHttpClient.Builder().apply {
             connectTimeout(60, TimeUnit.SECONDS)
             readTimeout(60, TimeUnit.SECONDS)
