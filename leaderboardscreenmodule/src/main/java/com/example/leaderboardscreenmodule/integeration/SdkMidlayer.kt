@@ -6,11 +6,11 @@ import com.example.leaderboardscreenmodule.MainActivity
 import com.example.leaderboardscreenmodule.core.Network.NetworkModule
 import com.example.leaderboardscreenmodule.theme.ColorWhitelabel
 
-class SdkMidlayer(val sdkData: SdkData, val sdkConfig: SdkConfig, context: Context) {
+ class SdkMidlayer(val sdkData: SdkData, val sdkConfig: SdkConfig, context: Context) {
 
     init {
         setColors()
-        setNetworkConfig()
+        //setNetworkConfig()
     }
 
     fun start(context: Context){

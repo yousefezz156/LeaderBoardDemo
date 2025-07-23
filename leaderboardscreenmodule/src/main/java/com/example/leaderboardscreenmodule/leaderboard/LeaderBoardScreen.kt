@@ -71,7 +71,7 @@ import java.util.Locale
          */
 
 fun LeaderBoardScreen(
-    leaderBoardViewModel: LeaderBoardViewModel,
+    leaderBoardViewModel: LeaderBoardViewModel= viewModel(),
     mockList: List<MockData>,
     modifier: Modifier = Modifier
 ) {
@@ -332,7 +332,7 @@ fun LeaderBoardScreen(
 
 
 @Composable
-fun LazyColumn(viewModel: LeaderBoardViewModel) {
+fun LazyColumn(viewModel: LeaderBoardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     val list by viewModel.state.collectAsState()
     LazyColumn {
         items(list.list) { item ->
