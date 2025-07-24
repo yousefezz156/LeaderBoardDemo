@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 
 object NetworkModule {
 
-    val dummy=false
+    var dummy: Boolean=false
 
     lateinit var sdkData: SdkData
     var token: String? = ""

@@ -1,5 +1,6 @@
 package com.example.leaderboardscreenmodule.DumyApi
 
+import android.util.Log
 import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoarderRepository
 
 class DummyDataUseCase(val repo: LeaderBoarderRepository = LeaderBoarderRepository() ) {
@@ -7,6 +8,7 @@ class DummyDataUseCase(val repo: LeaderBoarderRepository = LeaderBoarderReposito
     suspend fun DummyDataPagination(page:Int , perPage:Int) : DataResponsePagination{
         val modelList = arrayListOf<DummyDataUiModel>()
         val response = repo.getDummyData(page,perPage)
+        Log.d("response","Data size ${response.data.size}")
         response.data.map { modelList.add(it.mapData()) }
         return DataResponsePagination(page, modelList)
     }
