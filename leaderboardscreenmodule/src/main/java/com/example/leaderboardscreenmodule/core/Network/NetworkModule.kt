@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit
 
 object NetworkModule {
 
+    val dummy=false
+
     lateinit var sdkData: SdkData
     var token: String? = ""
     var lang: String? = null
@@ -27,14 +29,17 @@ object NetworkModule {
 
     //one function for all the APIs services
     internal inline fun <reified T> provideApi(
-        retrofit: Retrofit = provideRetrofit(
+        retrofit: Retrofit = if(dummy){
+            provideRetrofit(provideOkHttpClient(HeaderInterceptor("en", null)))
+        }else{provideRetrofit(
             provideOkHttpClient(
-                if (sdkData.userData != null) HeaderInterceptor(
+                if (sdkData?.userData != null) HeaderInterceptor(
                     lang ?: "en-US",
-                    sdkData.userData
+                    sdkData?.userData
                 ) else HeaderInterceptor(lang ?: "en-US")
             )
         )
+        }
     ):T {
 
         return retrofit!!.create(T::class.java)
@@ -46,7 +51,7 @@ object NetworkModule {
             addConverterFactory(GsonConverterFactory.create())
             addCallAdapterFactory(CoroutineCallAdapterFactory())
             client(okHttpClient)
-            baseUrl(sdkData.baseURL)
+            sdkData?.baseURL?.let { baseUrl(it) }
 
 
         }.build()

@@ -10,7 +10,7 @@ import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
 
 class LeaderBoarderRepository(
-    private val mockList: MockList,
+    private val mockList: MockList = MockList(),
     private val rankDetailsApi: RankDetailsApi = NetworkModule.provideApi(),
     private val dummyDataApi: DataApiServices = NetworkModule.provideApi()
 ) {

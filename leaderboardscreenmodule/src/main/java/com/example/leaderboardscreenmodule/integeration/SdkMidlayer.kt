@@ -10,7 +10,7 @@ import com.example.leaderboardscreenmodule.theme.ColorWhitelabel
 
     init {
         setColors()
-        //setNetworkConfig()
+        setNetworkConfig()
     }
 
     fun start(context: Context){

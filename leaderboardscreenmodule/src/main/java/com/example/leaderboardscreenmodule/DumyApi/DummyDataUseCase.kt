@@ -2,7 +2,7 @@ package com.example.leaderboardscreenmodule.DumyApi
 
 import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoarderRepository
 
-class DummyDataUseCase(val repo: LeaderBoarderRepository ) {
+class DummyDataUseCase(val repo: LeaderBoarderRepository = LeaderBoarderRepository() ) {
 
     suspend fun DummyDataPagination(page:Int , perPage:Int) : DataResponsePagination{
         val modelList = arrayListOf<DummyDataUiModel>()

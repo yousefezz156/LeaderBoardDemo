@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 
 class LeaderBoardViewModel(
     val leaderBoarderRepository: LeaderBoarderRepository = LeaderBoarderRepository(
-        mockList = MockList()
     ),
     val leaderBoardUseCase: LeaderBoardUseCase = LeaderBoardUseCase(leaderBoarderRepository),
     val dummyDataUseCase: DummyDataUseCase= DummyDataUseCase(leaderBoarderRepository),
