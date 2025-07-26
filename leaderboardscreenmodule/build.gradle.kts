@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-kapt")
+    id("maven-publish")
 
     alias(libs.plugins.jetbrains.kotlin.android)
 }
@@ -82,4 +83,19 @@ dependencies {
     //Paging
     implementation("androidx.paging:paging-compose:3.3.0")
     implementation("androidx.paging:paging-runtime-ktx:3.3.0")
+}
+
+// Publishing configuration
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                
+                groupId = "com.example"
+                artifactId = "leaderboardscreenmodule"
+                version = "1.0.0"
+            }
+        }
+    }
 }

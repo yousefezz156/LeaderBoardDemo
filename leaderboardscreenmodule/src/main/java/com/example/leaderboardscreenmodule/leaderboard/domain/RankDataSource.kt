@@ -35,6 +35,7 @@ class RankDataSource(/*val useCase: LeaderBoardUseCase*/ val dummyUseCase: Dummy
                 return LoadResult.Page(response.data ,null,if(response.data.size < 10)null else page+1)
             }
         }.onFailure{
+            android.util.Log.e("RankDataSource", "API call failed in pagination: ${Exception().message}")
             return LoadResult.Error(it)
 
         }

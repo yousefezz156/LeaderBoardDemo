@@ -52,6 +52,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.navigation.compose)
+    implementation(project(":leaderboardscreenmodule"))
     val lifecycle_version = "2.8.7"
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -71,7 +72,13 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
 
-    //SDK MANUAL
-        implementation(files("libs/leaderboardscreenmodule-debug.aar"))
-
+    // For development: Use local module (fastest)
+    implementation(project(":leaderboardscreenmodule"))
+    
+    // Fallback: Use AAR if module dependency doesn't work
+    // Uncomment the line below and comment out the line above if module dependency fails
+    // implementation(files("libs/leaderboardscreenmodule-release.aar"))
+    
+    // For production: Use JitPack (uncomment when ready to publish)
+    // implementation("com.github.yourusername:LeaderBoardDemo:1.0.0")
 }
