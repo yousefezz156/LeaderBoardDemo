@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,12 +22,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.leaderboardscreenmodule.DumyApi.DummyDataUiModel
 import com.example.leaderboardscreenmodule.R
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText
 
 @Composable
-fun CardView(mockData: MockData, modifier: Modifier = Modifier) {
+fun CardView( dummyDataUiModel: DummyDataUiModel, modifier: Modifier = Modifier) {
+    var count by remember{
+        mutableStateOf(0)
+    }
+
+    var score by remember {
+        mutableStateOf(1343)
+    }
+
     Column() {
         Row(
             modifier = modifier
@@ -31,21 +44,23 @@ fun CardView(mockData: MockData, modifier: Modifier = Modifier) {
                 .padding(start = 21.dp, end = 12.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             Box(contentAlignment = Alignment.Center, modifier = modifier.width(30.dp)){
-                Text(text = mockData.rank.toString(), color = Color.Black)
+                Text(text = count.toString(), color = Color.Black)
+                count++
             }
             Spacer(modifier = modifier.padding(4.dp))
-            CircleShapeForRank(mockData)
+            CircleShapeForRank( dummyDataUiModel)
             Spacer(modifier = modifier.padding(12.dp))
-            Text(text = mockData.first_name, color = Color.Black)
+            Text(text = dummyDataUiModel.firstName, color = Color.Black)
             Spacer(modifier = modifier.padding(13.dp))
             Column(horizontalAlignment = Alignment.End, modifier = modifier.fillMaxWidth()) {
                 Text(text = stringResource(id = R.string.transaction), color = colorResource(id = R.color.grey))
                 Spacer(modifier = modifier.padding(4.dp))
-                Text(text = mockData.score.toString(), color = Color.Black, fontWeight = FontWeight.Bold)
+                Text(text =score.toString(), color = Color.Black, fontWeight = FontWeight.Bold)
+                score+=236
             }
         }
 
-        if(mockData.rank !=10) {
+        if(count !=100) {
             Divider(
                 color = colorResource(id = R.color.grey),
                 modifier = modifier
@@ -59,15 +74,15 @@ fun CardView(mockData: MockData, modifier: Modifier = Modifier) {
 
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun prev() {
-    CardView(mockData = MockData(
-        "YOUSEF",
-        "eZZ",
-        2123,
-        10,
-        colors = Color.Green
-    )
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun prev() {
+//    CardView(mockData = MockData(
+//        "YOUSEF",
+//        "eZZ",
+//        2123,
+//        10,
+//        colors = Color.Green
+//    )
+//    )
+//}

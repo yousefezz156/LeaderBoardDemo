@@ -70,4 +70,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+
+    //SDK MANUAL
+        implementation(files("libs/leaderboardscreenmodule-debug.aar"))
+
 }

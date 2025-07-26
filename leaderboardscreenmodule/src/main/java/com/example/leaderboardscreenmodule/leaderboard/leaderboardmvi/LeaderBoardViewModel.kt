@@ -7,6 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.cachedIn
 import com.example.leaderboardscreenmodule.DumyApi.DataApiServices
+import com.example.leaderboardscreenmodule.DumyApi.DummyDataUiModel
 import com.example.leaderboardscreenmodule.DumyApi.DummyDataUseCase
 import com.example.leaderboardscreenmodule.leaderboard.domain.LeaderBoardUseCase
 import com.example.leaderboardscreenmodule.leaderboard.domain.RankDataSource
@@ -50,14 +51,15 @@ class LeaderBoardViewModel(
     }
 
     init {
-        onEvent(LeaderBoardIntent.GetData)
+pageConfig
     }
 
     fun onEvent(leaderBoardIntent: LeaderBoardIntent) {
         when (leaderBoardIntent) {
-            is LeaderBoardIntent.GetData -> {
-                getLeaderBoardData()
-            }
+            is LeaderBoardIntent.GetData -> getLeaderBoardData()
+            is LeaderBoardIntent.LoadNextPage -> loadNextPage()
+            is LeaderBoardIntent.RefreshScreen -> {}
+            is LeaderBoardIntent.Idle -> Unit
 
         }
     }
@@ -65,7 +67,7 @@ class LeaderBoardViewModel(
     fun getLeaderBoardData() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _state.value = _state.value.copy(list = leaderBoarderRepository.getMockList())
+                _state.value = _state.value.copy(list =MockList().getList())
                 _state.value = _state.value.copy(isLoadedSuccess = true)
             } catch (e: Exception) {
                 _state.value = _state.value.copy(error = e.message.toString())

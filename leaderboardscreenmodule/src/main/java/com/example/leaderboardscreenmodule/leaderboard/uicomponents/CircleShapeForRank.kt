@@ -13,14 +13,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.leaderboardscreenmodule.DumyApi.DummyDataUiModel
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText
 
 @Composable
-fun CircleShapeForRank(mockData: MockData, modifier: Modifier = Modifier) {
+fun CircleShapeForRank( dummyDataUiModel: DummyDataUiModel, modifier: Modifier = Modifier) {
 
-    val first_name = mockData.first_name.toCharArray()[0]
-    val last_name = mockData.last_name.toCharArray()[0]
+    val first_name = dummyDataUiModel.firstName.toCharArray()[0]
+    val last_name = dummyDataUiModel.lastName.toCharArray()[0]
     var two_words = ""
     two_words += first_name
     two_words += last_name
@@ -29,7 +30,7 @@ fun CircleShapeForRank(mockData: MockData, modifier: Modifier = Modifier) {
             .size(42.dp)
             .clip(shape = CircleShape)
             .background(
-                color = mockData.colors
+                color = backgroundColorsForWhiteText.random()
             ), contentAlignment = Alignment.Center
     ) {
         Text(text = two_words, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)

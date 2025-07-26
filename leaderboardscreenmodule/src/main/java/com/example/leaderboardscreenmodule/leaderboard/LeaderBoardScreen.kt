@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.leaderboardscreenmodule.R
 import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
@@ -71,7 +72,7 @@ import java.util.Locale
          */
 
 fun LeaderBoardScreen(
-    leaderBoardViewModel: LeaderBoardViewModel= viewModel(),
+    leaderBoardViewModel: LeaderBoardViewModel,
     mockList: List<MockData>,
     modifier: Modifier = Modifier
 ) {
@@ -334,17 +335,20 @@ fun LeaderBoardScreen(
 @Composable
 fun LazyColumn(viewModel: LeaderBoardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     val list by viewModel.state.collectAsState()
+    var listPage = viewModel.pageConfig.collectAsLazyPagingItems()
+
+
     LazyColumn {
-        items(list.list) { item ->
-            if (item.rank > 3) {
-                key(item.rank) {
-                    CardView(mockData = item)
-                }
+        items(listPage.itemCount) { index ->
+            listPage[index]?.let { dummyItem ->
+                // Assuming you have a way to get MockData for each item
+                // You might need to adjust this part based on your actual data structure
+                CardView( dummyDataUiModel = dummyItem)
             }
         }
-
     }
 }
+
 
 
 @RequiresApi(Build.VERSION_CODES.O)
