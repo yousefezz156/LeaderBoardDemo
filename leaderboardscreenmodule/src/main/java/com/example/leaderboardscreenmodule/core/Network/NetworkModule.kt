@@ -30,13 +30,13 @@ object NetworkModule {
     //one function for all the APIs services
     internal inline fun <reified T> provideApi(
         retrofit: Retrofit = if(dummy){
-            provideRetrofit(provideOkHttpClient(HeaderInterceptor("en", null)))
+            provideRetrofit(provideOkHttpClient())
         }else{provideRetrofit(
             provideOkHttpClient(
-                if (sdkData?.userData != null) HeaderInterceptor(
-                    lang ?: "en-US",
-                    sdkData?.userData
-                ) else HeaderInterceptor(lang ?: "en-US")
+//                if (sdkData?.userData != null) HeaderInterceptor(
+//                    lang ?: "en-US",
+//                    sdkData?.userData
+//                ) else HeaderInterceptor(lang ?: "en-US")
             )
         )
         }
@@ -57,12 +57,13 @@ object NetworkModule {
         }.build()
     }
 
-     internal fun provideOkHttpClient(headerInterceptor: HeaderInterceptor): OkHttpClient {
+     internal fun provideOkHttpClient(/*headerInterceptor: HeaderInterceptor*/): OkHttpClient {
         return OkHttpClient.Builder().apply {
             connectTimeout(60, TimeUnit.SECONDS)
             readTimeout(60, TimeUnit.SECONDS)
             writeTimeout(60, TimeUnit.SECONDS)
-            addInterceptor(headerInterceptor)
+            addInterceptor(HeaderInterceptor())
+            //addInterceptor(headerInterceptor)
             addInterceptor(provideLogInterceptor())
             addInterceptor(ErrorInterseptor{if(!errorInvoked){
                 errorInvoked = true
