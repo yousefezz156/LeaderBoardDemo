@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.graphics.Color
 import com.example.leaderboardscreenmodule.core.toString
-import org.intellij.lang.annotations.Language
+
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 import java.util.Date
@@ -83,6 +83,10 @@ fun generateHmacSignature(
     return signature
 
 }
+
+data class Language(
+    val code: String
+)
 
 data class SdkConfig(
     val language: Language,

@@ -25,7 +25,7 @@ object NetworkModule {
         android.util.Log.d("NetworkModule", "Initializing data with base URL: ${sdkData.baseURL}")
         NetworkModule.sdkData = sdkData
         token = sdkData.userToken
-        lang = language.language.toString()
+        lang = language.language.code
         android.util.Log.d("NetworkModule", "Data initialized - token: $token, lang: $lang, dummy: $dummy")
     }
 

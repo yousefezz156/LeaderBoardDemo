@@ -44,9 +44,10 @@ import com.example.leaderboardscreenmodule.integeration.LeaderBoard
 import com.example.leaderboardscreenmodule.integeration.SdkColors
 import com.example.leaderboardscreenmodule.integeration.SdkConfig
 import com.example.leaderboardscreenmodule.integeration.SdkData
+import com.example.leaderboardscreenmodule.integeration.Language
 //import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoardViewModelFactory
 import kotlinx.coroutines.delay
-import org.intellij.lang.annotations.Language
+
 
  class MainActivity : ComponentActivity() {
     private lateinit var viewModel: com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
@@ -83,7 +84,7 @@ import org.intellij.lang.annotations.Language
         )
 
         val config = SdkConfig(
-            language = Language("en"),
+            language = Language(code = "en"),
             colors = colors
         )
         LeaderBoard.initSdk(context =this,config,data )
