@@ -20,13 +20,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class LeaderBoardViewModel(
-    val leaderBoarderRepository: LeaderBoarderRepository = LeaderBoarderRepository(
-    ),
-    val leaderBoardUseCase: LeaderBoardUseCase = LeaderBoardUseCase(leaderBoarderRepository),
-    val dummyDataUseCase: DummyDataUseCase= DummyDataUseCase(leaderBoarderRepository),
-    val rankDataSource: RankDataSource = RankDataSource(dummyDataUseCase)
-) : ViewModel() {
+class LeaderBoardViewModel : ViewModel() {
+    private val leaderBoarderRepository: LeaderBoarderRepository by lazy { LeaderBoarderRepository() }
+    private val leaderBoardUseCase: LeaderBoardUseCase by lazy { LeaderBoardUseCase(leaderBoarderRepository) }
+    private val dummyDataUseCase: DummyDataUseCase by lazy { DummyDataUseCase(leaderBoarderRepository) }
+    private val rankDataSource: RankDataSource by lazy { RankDataSource(dummyDataUseCase) }
 
     private var _state = MutableStateFlow(LeaderBoardState())
     var state: StateFlow<LeaderBoardState> = _state.asStateFlow()
@@ -40,36 +38,59 @@ class LeaderBoardViewModel(
             .flow.cachedIn(viewModelScope) // here we convert it to flow so the UI can read it
 
     private fun setDataSource(): RankDataSource {
-        val dataSource = RankDataSource(dummyDataUseCase)
-        return dataSource
+        return rankDataSource
     }
 
     fun loadNextPage() {
+        android.util.Log.d("LeaderBoardViewModel", "loadNextPage called")
         viewModelScope.launch {
+            android.util.Log.d("LeaderBoardViewModel", "loadNextPage coroutine started")
             rankDataSource.loadNextPage()
+            android.util.Log.d("LeaderBoardViewModel", "loadNextPage completed")
         }
     }
 
     init {
-pageConfig
+        // Initialize the page config
+        getLeaderBoardData()
     }
 
     fun onEvent(leaderBoardIntent: LeaderBoardIntent) {
+        android.util.Log.d("LeaderBoardViewModel", "Received event: ${leaderBoardIntent::class.java.simpleName}")
         when (leaderBoardIntent) {
-            is LeaderBoardIntent.GetData -> getLeaderBoardData()
-            is LeaderBoardIntent.LoadNextPage -> loadNextPage()
-            is LeaderBoardIntent.RefreshScreen -> {}
-            is LeaderBoardIntent.Idle -> Unit
-
+            is LeaderBoardIntent.GetData -> {
+                android.util.Log.d("LeaderBoardViewModel", "Processing GetData event")
+                getLeaderBoardData()
+            }
+            is LeaderBoardIntent.LoadNextPage -> {
+                android.util.Log.d("LeaderBoardViewModel", "Processing LoadNextPage event")
+                loadNextPage()
+            }
+            is LeaderBoardIntent.RefreshScreen -> {
+                android.util.Log.d("LeaderBoardViewModel", "Processing RefreshScreen event")
+            }
+            is LeaderBoardIntent.Idle -> {
+                android.util.Log.d("LeaderBoardViewModel", "Processing Idle event")
+                Unit
+            }
         }
     }
 
     fun getLeaderBoardData() {
+        android.util.Log.d("LeaderBoardViewModel", "getLeaderBoardData started")
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _state.value = _state.value.copy(list =MockList().getList())
+                android.util.Log.d("LeaderBoardViewModel", "Getting mock list")
+                val mockList = MockList().getList()
+                android.util.Log.d("LeaderBoardViewModel", "Mock list size: ${mockList.size}")
+                _state.value = _state.value.copy(list = mockList)
                 _state.value = _state.value.copy(isLoadedSuccess = true)
+                android.util.Log.d("LeaderBoardViewModel", "State updated, triggering paging")
+                // Trigger the paging data source to load
+                rankDataSource.loadNextPage()
+                android.util.Log.d("LeaderBoardViewModel", "Paging triggered")
             } catch (e: Exception) {
+                android.util.Log.e("LeaderBoardViewModel", "Error in getLeaderBoardData: ${e.message}")
                 _state.value = _state.value.copy(error = e.message.toString())
             }
         }

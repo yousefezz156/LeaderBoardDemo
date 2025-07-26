@@ -5,7 +5,7 @@ import com.example.leaderboardscreenmodule.leaderboard.entity.ApiResponse.RanksI
 import com.example.leaderboardscreenmodule.leaderboard.entity.RankPagination
 import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoarderRepository
 
-class LeaderBoardUseCase(private val leaderBoardRepo:LeaderBoarderRepository = LeaderBoarderRepository()) {
+class LeaderBoardUseCase(private val leaderBoardRepo:LeaderBoarderRepository) {
 
     suspend fun rankpagination(page :Int, itemPerPage:Int): RankPagination{
         var modelList = arrayListOf<RankUiModel>()

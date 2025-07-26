@@ -22,38 +22,48 @@ object NetworkModule {
     var errorInvoked : Boolean = false // means if there any error
 
     fun initializedata(sdkData: SdkData, language: SdkConfig) {
+        android.util.Log.d("NetworkModule", "Initializing data with base URL: ${sdkData.baseURL}")
         NetworkModule.sdkData = sdkData
         token = sdkData.userToken
         lang = language.language.toString()
+        android.util.Log.d("NetworkModule", "Data initialized - token: $token, lang: $lang, dummy: $dummy")
     }
 
     //one function for all the APIs services
     internal inline fun <reified T> provideApi(
         retrofit: Retrofit = if(dummy){
-            provideRetrofit(provideOkHttpClient())
-        }else{provideRetrofit(
-            provideOkHttpClient(
-//                if (sdkData?.userData != null) HeaderInterceptor(
-//                    lang ?: "en-US",
-//                    sdkData?.userData
-//                ) else HeaderInterceptor(lang ?: "en-US")
+            // When dummy is true, use a mock base URL that won't actually make network calls
+            android.util.Log.d("NetworkModule", "Using dummy mode with mock API")
+            provideRetrofit(provideOkHttpClient(), "https://mock.api/")
+        }else{
+            android.util.Log.d("NetworkModule", "Using real API mode")
+            provideRetrofit(
+                provideOkHttpClient()
             )
-        )
         }
     ):T {
-
+        android.util.Log.d("NetworkModule", "Creating API service for ${T::class.java.simpleName}")
         return retrofit!!.create(T::class.java)
     }
 
 
-     internal fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+     internal fun provideRetrofit(okHttpClient: OkHttpClient, baseUrl: String? = null): Retrofit {
+        val finalBaseUrl = if (baseUrl != null) {
+            android.util.Log.d("NetworkModule", "Using provided base URL: $baseUrl")
+            baseUrl
+        } else {
+            val sdkBaseUrl = sdkData?.baseURL
+            android.util.Log.d("NetworkModule", "Using SDK base URL: $sdkBaseUrl")
+            sdkBaseUrl
+        }
+        
         return Retrofit.Builder().apply {
             addConverterFactory(GsonConverterFactory.create())
             addCallAdapterFactory(CoroutineCallAdapterFactory())
             client(okHttpClient)
-            sdkData?.baseURL?.let { baseUrl(it) }
-
-
+            if (finalBaseUrl != null) {
+                baseUrl(finalBaseUrl)
+            }
         }.build()
     }
 

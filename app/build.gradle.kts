@@ -72,6 +72,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
 
     //SDK MANUAL
-        implementation(files("libs/leaderboardscreenmodule-debug.aar"))
+        //implementation(files("libs/leaderboardscreenmodule-debug.aar"))
+
 
 }

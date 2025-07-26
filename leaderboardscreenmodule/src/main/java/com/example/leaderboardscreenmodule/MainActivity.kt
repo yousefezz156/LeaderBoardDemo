@@ -34,32 +34,72 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.leaderboardscreenmodule.approutes.AppNav
+import com.example.leaderboardscreenmodule.core.Network.NetworkModule
+import com.example.leaderboardscreenmodule.integeration.LeaderBoard
+import com.example.leaderboardscreenmodule.integeration.SdkColors
+import com.example.leaderboardscreenmodule.integeration.SdkConfig
+import com.example.leaderboardscreenmodule.integeration.SdkData
 //import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoardViewModelFactory
 import kotlinx.coroutines.delay
+import org.intellij.lang.annotations.Language
 
-internal class MainActivity : ComponentActivity() {
+ class MainActivity : ComponentActivity() {
     private lateinit var viewModel: com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        android.util.Log.d("MainActivity", "onCreate started")
 //        val leaderBoarderRepository = LeaderBoarderRepository(mockList = MockList())
 //        val factory = LeaderBoardViewModelFactory(leaderBoarderRepository)
 //
 //        // Get the ViewModel
 //        viewModel = ViewModelProvider(this, factory)[LeaderBoardViewModel::class.java]
+        val data = SdkData(
+            userName ="yousef",
+            baseURL="https://reqres.in/api/",
+            userToken = "reqres-free-v1",
+            appName = "FinalNoteApp"
+        )
+
+        NetworkModule.dummy= true
+
+        val colors = SdkColors(
+            activeColor = Color.Red,
+            mainColor = Color.Blue,
+            secondTextColor = Color.Green,
+            mainTextColor = Color.Yellow,
+            variantTextColor = Color.Magenta,
+            errorColor = Color.Cyan,
+            successColor = Color.Black,
+            buttonColor = Color.Gray,
+            failingImageColor = Color.DarkGray,
+            failingImageBG = Color.LightGray,
+            colorSchemeIsDark = true
+        )
+
+        val config = SdkConfig(
+            language = Language("en"),
+            colors = colors
+        )
+        LeaderBoard.initSdk(context =this,config,data )
+        android.util.Log.d("MainActivity", "SDK initialized, setting up UI")
         enableEdgeToEdge()
         setContent {
             com.example.leaderboardscreenmodule.theme.LeaderBoardDemoTheme {
+                val context = LocalContext.current
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(
                         modifier = Modifier
                             .padding(innerPadding)
                             .fillMaxSize()
                     ) {
-                        com.example.leaderboardscreenmodule.approutes.AppNav()
+
+                        AppNav()
 
                         //testAnimatedVisibility()
                     }

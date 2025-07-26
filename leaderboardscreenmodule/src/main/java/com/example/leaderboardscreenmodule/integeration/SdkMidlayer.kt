@@ -9,16 +9,22 @@ import com.example.leaderboardscreenmodule.theme.ColorWhitelabel
  class SdkMidlayer(val sdkData: SdkData, val sdkConfig: SdkConfig, context: Context) {
 
     init {
+        android.util.Log.d("SdkMidlayer", "Initializing SDK midlayer")
         setColors()
         setNetworkConfig()
+        android.util.Log.d("SdkMidlayer", "SDK midlayer initialized")
     }
 
     fun start(context: Context){
+        android.util.Log.d("SdkMidlayer", "Starting MainActivity")
         context.startActivity(Intent(context, MainActivity::class.java))
+        android.util.Log.d("SdkMidlayer", "MainActivity started")
     }
 
     fun setNetworkConfig(){
+        android.util.Log.d("SdkMidlayer", "Setting network config")
         NetworkModule.initializedata(sdkData, sdkConfig)
+        android.util.Log.d("SdkMidlayer", "Network config set")
     }
     fun setColors(){
         ColorWhitelabel.apply {

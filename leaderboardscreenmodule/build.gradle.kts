@@ -1,6 +1,8 @@
 plugins {
-    id("com.android.library")
+    //id("com.android.library")
+    id ("com.android.application") // not library!
     id("kotlin-kapt")
+    alias(libs.plugins.compose.compiler)
 
     alias(libs.plugins.jetbrains.kotlin.android)
 }
@@ -12,10 +14,9 @@ android {
     defaultConfig {
         minSdk = 24
         targetSdk = 34
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        versionCode = 1
+        versionName = "1.0"
+
     }
 
     buildTypes {

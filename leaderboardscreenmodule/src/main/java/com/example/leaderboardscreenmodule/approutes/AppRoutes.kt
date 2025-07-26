@@ -20,10 +20,13 @@ object AppRoutes {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNav() {
+    android.util.Log.d("AppNav", "AppNav composable started")
     val navController = rememberNavController()
     val leaderBoardViewModel: LeaderBoardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    android.util.Log.d("AppNav", "ViewModel created")
     NavHost(navController = navController, startDestination = AppRoutes.LEADERBOARD) {
         composable(route = AppRoutes.LEADERBOARD) {
+            android.util.Log.d("AppNav", "Navigating to LeaderBoardScreen")
             LeaderBoardScreen(
                 leaderBoardViewModel = leaderBoardViewModel,
                 mockList = MockList().getList()

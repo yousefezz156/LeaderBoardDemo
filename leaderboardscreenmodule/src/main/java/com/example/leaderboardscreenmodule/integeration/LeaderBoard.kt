@@ -13,13 +13,17 @@ object LeaderBoard {
 
     //initSDK
     fun initSdk(context : Context, sdkConfig: SdkConfig, sdkData: SdkData): LeaderBoard {
+        android.util.Log.d("LeaderBoard", "Initializing SDK with base URL: ${sdkData.baseURL}")
         sdkMidlayer = SdkMidlayer(sdkData,sdkConfig,context)
+        android.util.Log.d("LeaderBoard", "SDK initialized successfully")
         return this
     }
 
     //openSDK
     fun openSdk(context: Context){
+        android.util.Log.d("LeaderBoard", "Opening SDK")
         sdkMidlayer?.start(context)
+        android.util.Log.d("LeaderBoard", "SDK opened")
     }
 }
 

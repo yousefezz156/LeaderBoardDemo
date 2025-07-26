@@ -10,10 +10,10 @@ import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
 
 class LeaderBoarderRepository(
-    private val mockList: MockList = MockList(),
-    private val rankDetailsApi: RankDetailsApi = NetworkModule.provideApi(),
-    private val dummyDataApi: DataApiServices = NetworkModule.provideApi()
+    private val mockList: MockList = MockList()
 ) {
+    private val rankDetailsApi: RankDetailsApi by lazy { NetworkModule.provideApi() }
+    private val dummyDataApi: DataApiServices by lazy { NetworkModule.provideApi() }
     fun getMockList(): List<MockData> {
         return mockList.getList()
 
@@ -27,7 +27,15 @@ class LeaderBoarderRepository(
     }
 
     suspend fun getDummyData(page: Int, perPage: Int): DataResponse {
-        return dummyDataApi.getDataInfo(page, perPage)
+        android.util.Log.d("LeaderBoarderRepository", "Getting dummy data for page: $page, perPage: $perPage")
+        try {
+            val response = dummyDataApi.getDataInfo(page, perPage)
+            android.util.Log.d("LeaderBoarderRepository", "API call successful, data size: ${response.data.size}")
+            return response
+        } catch (e: Exception) {
+            android.util.Log.e("LeaderBoarderRepository", "API call failed: ${e.message}")
+            throw e
+        }
     }
 
 

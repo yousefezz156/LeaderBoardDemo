@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.leaderboardscreenmodule.R
+import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardIntent
 import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
@@ -76,6 +77,7 @@ fun LeaderBoardScreen(
     mockList: List<MockData>,
     modifier: Modifier = Modifier
 ) {
+    android.util.Log.d("LeaderBoardScreen", "LeaderBoardScreen composable started with ${mockList.size} mock items")
     var showDialog by remember {
         mutableStateOf(false)
     }
@@ -263,7 +265,7 @@ fun LeaderBoardScreen(
             )
 
             Spacer(modifier = modifier.padding(top = 16.dp))
-            LazyColumn(viewModel = leaderBoardViewModel)
+            LeaderBoardLazyColumn(viewModel = leaderBoardViewModel)
 
 
         }
@@ -333,19 +335,32 @@ fun LeaderBoardScreen(
 
 
 @Composable
-fun LazyColumn(viewModel: LeaderBoardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun LeaderBoardLazyColumn(viewModel: LeaderBoardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+    android.util.Log.d("LeaderBoardLazyColumn", "LeaderBoardLazyColumn composable started")
     val list by viewModel.state.collectAsState()
-    var listPage = viewModel.pageConfig.collectAsLazyPagingItems()
+    val listPage = viewModel.pageConfig.collectAsLazyPagingItems()
 
+    // Debug: Print the item count
+    android.util.Log.d("LeaderBoardLazyColumn", "Item count: ${listPage.itemCount}")
+    android.util.Log.d("LeaderBoardLazyColumn", "State list size: ${list.list.size}")
 
     LazyColumn {
         items(listPage.itemCount) { index ->
+            android.util.Log.d("LeaderBoardLazyColumn", "Rendering item at index: $index")
             listPage[index]?.let { dummyItem ->
-                // Assuming you have a way to get MockData for each item
-                // You might need to adjust this part based on your actual data structure
-                CardView( dummyDataUiModel = dummyItem)
+                android.util.Log.d("LeaderBoardLazyColumn", "Item data: ${dummyItem.firstName} ${dummyItem.lastName}")
+                CardView(dummyDataUiModel = dummyItem)
+            } ?: run {
+                android.util.Log.d("LeaderBoardLazyColumn", "Item at index $index is null")
             }
         }
+    }
+    
+    // Trigger initial data load
+    LaunchedEffect(Unit) {
+        android.util.Log.d("LeaderBoardLazyColumn", "LaunchedEffect triggered, calling GetData")
+        viewModel.onEvent(LeaderBoardIntent.GetData)
+        android.util.Log.d("LeaderBoardLazyColumn", "GetData event sent")
     }
 }
 

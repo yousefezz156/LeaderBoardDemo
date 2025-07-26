@@ -30,11 +30,11 @@ import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText
 @Composable
 fun CardView( dummyDataUiModel: DummyDataUiModel, modifier: Modifier = Modifier) {
     var count by remember{
-        mutableStateOf(0)
+        mutableStateOf(dummyDataUiModel.id)
     }
 
     var score by remember {
-        mutableStateOf(1343)
+        mutableStateOf(1343 + (dummyDataUiModel.id * 100))
     }
 
     Column() {
@@ -45,18 +45,16 @@ fun CardView( dummyDataUiModel: DummyDataUiModel, modifier: Modifier = Modifier)
         ) {
             Box(contentAlignment = Alignment.Center, modifier = modifier.width(30.dp)){
                 Text(text = count.toString(), color = Color.Black)
-                count++
             }
             Spacer(modifier = modifier.padding(4.dp))
             CircleShapeForRank( dummyDataUiModel)
             Spacer(modifier = modifier.padding(12.dp))
-            Text(text = dummyDataUiModel.firstName, color = Color.Black)
+            Text(text = "${dummyDataUiModel.firstName} ${dummyDataUiModel.lastName}", color = Color.Black)
             Spacer(modifier = modifier.padding(13.dp))
             Column(horizontalAlignment = Alignment.End, modifier = modifier.fillMaxWidth()) {
                 Text(text = stringResource(id = R.string.transaction), color = colorResource(id = R.color.grey))
                 Spacer(modifier = modifier.padding(4.dp))
                 Text(text =score.toString(), color = Color.Black, fontWeight = FontWeight.Bold)
-                score+=236
             }
         }
 
