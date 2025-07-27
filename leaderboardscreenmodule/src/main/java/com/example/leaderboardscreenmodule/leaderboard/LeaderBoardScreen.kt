@@ -2,6 +2,7 @@ package com.example.leaderboardscreenmodule.leaderboard
 
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,15 +19,20 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +52,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.leaderboardscreenmodule.R
+import com.example.leaderboardscreenmodule.leaderboard.domain.RankDataSource
 import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
@@ -71,7 +80,7 @@ import java.util.Locale
          */
 
 fun LeaderBoardScreen(
-    leaderBoardViewModel: LeaderBoardViewModel= viewModel(),
+    leaderBoardViewModel: LeaderBoardViewModel = viewModel(),
     mockList: List<MockData>,
     modifier: Modifier = Modifier
 ) {
@@ -199,7 +208,8 @@ fun LeaderBoardScreen(
                     )
                     Spacer(modifier = modifier.padding(4.dp))
                     Row() {
-                        Text("(",
+                        Text(
+                            "(",
                             fontSize = 16.sp,
                             color = colorResource(id = R.color.blue_light)
                         )
@@ -222,7 +232,8 @@ fun LeaderBoardScreen(
                                 fontSize = 10.sp
                             )
                         }
-                        Text(")",
+                        Text(
+                            ")",
                             fontSize = 16.sp,
                             color = colorResource(id = R.color.blue_light)
                         )
@@ -333,23 +344,60 @@ fun LeaderBoardScreen(
 
 @Composable
 fun LazyColumn(viewModel: LeaderBoardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
-    val list by viewModel.state.collectAsState()
+    //val list by viewModel.state.collectAsState()
+
+    val listPage = viewModel.pageConfig.collectAsLazyPagingItems()
+    var lastIndex: Boolean = false;
+    var listState = rememberLazyListState()
+
+    var count by remember {
+        mutableStateOf(0)
+    }
+
     LazyColumn {
-        items(list.list) { item ->
-            if (item.rank > 3) {
-                key(item.rank) {
-                    CardView(mockData = item)
-                }
+
+        items(listPage.itemCount) { item ->
+            lastIndex = item == listPage.itemCount - 1
+            listPage[item]?.let { dummy ->
+                CardView(dummy)
             }
+
+
+            Log.d("PagingDebug", "index $lastIndex")
+
+//            if(listPage.loadState.append is LoadState.Loading  ){
+//                CircularProgressIndicator(
+//                    modifier = Modifier
+//                        .size(50.dp)
+//                        .offset(x = 180.dp)
+//                        .padding(8.dp)
+//                )
+//            }
+
         }
+        if (
+            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == listPage.itemCount - 1
+        ) {
+            item {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(50.dp)
+                        .offset(x = 180.dp)
+                        .padding(8.dp)
+                )
+            }
+
+
+        }
+
 
     }
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun LeaderBoardPreview() {
-    LeaderBoardScreen(viewModel(), mockList = MockList().getList())
-}
+//@RequiresApi(Build.VERSION_CODES.O)
+//@Preview(showBackground = true)
+//@Composable
+//fun LeaderBoardPreview() {
+//    LeaderBoardScreen(viewModel(), mockList = MockList().getList())
+//}

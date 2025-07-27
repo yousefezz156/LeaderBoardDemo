@@ -7,5 +7,5 @@ data class DummyDataUiModel(
     val email: String,
     val firstName: String,
     val lastName: String,
-    val avater: String,
+    val avater: String?,
 )

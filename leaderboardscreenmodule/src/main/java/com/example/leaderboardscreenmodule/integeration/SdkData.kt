@@ -84,8 +84,12 @@ fun generateHmacSignature(
 
 }
 
+data class Language(
+    val code:String
+)
+
 data class SdkConfig(
-    val language: Language,
+    val language: com.example.leaderboardscreenmodule.integeration.Language,
     val colors: SdkColors,
 )
 

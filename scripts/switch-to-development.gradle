@@ -1,0 +1,22 @@
+// Script to switch to development mode (local module)
+// Usage: ./gradlew -b scripts/switch-to-development.gradle switchToDevelopment
+
+task switchToDevelopment {
+    doLast {
+        def buildFile = file("app/build.gradle.kts")
+        def content = buildFile.text
+        
+        // Replace JitPack dependency with local module
+        content = content.replace(
+            '// implementation(project(":leaderboardscreenmodule"))',
+            'implementation(project(":leaderboardscreenmodule"))'
+        )
+        content = content.replace(
+            'implementation("com.github.yourusername:LeaderBoardDemo:1.0.0")',
+            '// implementation("com.github.yourusername:LeaderBoardDemo:1.0.0")'
+        )
+        
+        buildFile.text = content
+        println "Switched to development mode (local module)"
+    }
+} 

@@ -34,7 +34,7 @@ class LeaderBoardViewModel(
     var colors = _colors.asStateFlow()
 
     val pageConfig =
-        Pager(PagingConfig(pageSize = 10),
+        Pager(PagingConfig(pageSize = 6, prefetchDistance = 1),
             pagingSourceFactory = { setDataSource() })
             .flow.cachedIn(viewModelScope) // here we convert it to flow so the UI can read it
 
@@ -43,15 +43,12 @@ class LeaderBoardViewModel(
         return dataSource
     }
 
-    fun loadNextPage() {
-        viewModelScope.launch {
-            rankDataSource.loadNextPage()
-        }
-    }
+//    fun loadNextPage() {
+//        viewModelScope.launch {
+//            rankDataSource.loadNextPage()
+//        }
+//    }
 
-    init {
-        onEvent(LeaderBoardIntent.GetData)
-    }
 
     fun onEvent(leaderBoardIntent: LeaderBoardIntent) {
         when (leaderBoardIntent) {

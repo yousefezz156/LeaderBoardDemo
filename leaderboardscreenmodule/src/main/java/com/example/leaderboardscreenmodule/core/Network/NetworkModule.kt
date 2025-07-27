@@ -13,13 +13,13 @@ import java.util.concurrent.TimeUnit
 
 object NetworkModule {
 
-    var dummy: Boolean=false
+    var dummy: Boolean = true
 
     lateinit var sdkData: SdkData
     var token: String? = ""
     var lang: String? = null
-    var onErrorAction : ((ErrorEvent) ->Unit)? = null
-    var errorInvoked : Boolean = false // means if there any error
+    var onErrorAction: ((ErrorEvent) -> Unit)? = null
+    var errorInvoked: Boolean = false // means if there any error
 
     fun initializedata(sdkData: SdkData, language: SdkConfig) {
         NetworkModule.sdkData = sdkData
@@ -29,24 +29,25 @@ object NetworkModule {
 
     //one function for all the APIs services
     internal inline fun <reified T> provideApi(
-        retrofit: Retrofit = if(dummy){
-            provideRetrofit(provideOkHttpClient(HeaderInterceptor("en", null)))
-        }else{provideRetrofit(
-            provideOkHttpClient(
-                if (sdkData?.userData != null) HeaderInterceptor(
-                    lang ?: "en-US",
-                    sdkData?.userData
-                ) else HeaderInterceptor(lang ?: "en-US")
+        retrofit: Retrofit = if (dummy) {
+            provideRetrofit(provideOkHttpClient())
+        } else {
+            provideRetrofit(
+                provideOkHttpClient(
+//                    if (sdkData?.userData != null) HeaderInterceptor(
+//                        lang ?: "en-US",
+//                        sdkData?.userData
+//                    ) else HeaderInterceptor(lang ?: "en-US")
+                )
             )
-        )
         }
-    ):T {
+    ): T {
 
         return retrofit!!.create(T::class.java)
     }
 
 
-     internal fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    internal fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder().apply {
             addConverterFactory(GsonConverterFactory.create())
             addCallAdapterFactory(CoroutineCallAdapterFactory())
@@ -57,17 +58,25 @@ object NetworkModule {
         }.build()
     }
 
-     internal fun provideOkHttpClient(headerInterceptor: HeaderInterceptor): OkHttpClient {
+    internal fun provideOkHttpClient(/*headerInterceptor: HeaderInterceptor*/): OkHttpClient {
         return OkHttpClient.Builder().apply {
             connectTimeout(60, TimeUnit.SECONDS)
             readTimeout(60, TimeUnit.SECONDS)
             writeTimeout(60, TimeUnit.SECONDS)
-            addInterceptor(headerInterceptor)
+            addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader("x-api-key", "reqres-free-v1")
+                    .build()
+
+                chain.proceed(request)
+            }
             addInterceptor(provideLogInterceptor())
-            addInterceptor(ErrorInterseptor{if(!errorInvoked){
-                errorInvoked = true
-                onErrorAction?.invoke(it)
-            } })
+            addInterceptor(ErrorInterseptor {
+                if (!errorInvoked) {
+                    errorInvoked = true
+                    onErrorAction?.invoke(it)
+                }
+            })
         }.build()
     }
 
