@@ -55,15 +55,30 @@ class LeaderBoardViewModel(
             is LeaderBoardIntent.GetData -> {
                 getLeaderBoardData()
             }
+            is LeaderBoardIntent.RefreshData ->{
+                refreshScreen()
+            }
 
         }
+    }
+
+    fun refreshScreen(){
+        viewModelScope.launch {
+            rankDataSource.invalidate()
+            _state.value=_state.value.copy(isRefreshSuccess = true)
+        }
+
+    }
+
+    fun setRefreshKeyFalse(){
+        _state.value=_state.value.copy(isRefreshSuccess = false)
     }
 
     fun getLeaderBoardData() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _state.value = _state.value.copy(list = leaderBoarderRepository.getMockList())
-                _state.value = _state.value.copy(isLoadedSuccess = true)
+                _state.value = _state.value.copy(isRefreshSuccess = true)
             } catch (e: Exception) {
                 _state.value = _state.value.copy(error = e.message.toString())
             }

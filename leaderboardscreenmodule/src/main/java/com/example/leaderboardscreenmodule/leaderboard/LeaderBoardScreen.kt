@@ -29,6 +29,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -37,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,17 +57,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.leaderboardscreenmodule.DumyApi.DummyDataUiModel
 import com.example.leaderboardscreenmodule.R
 import com.example.leaderboardscreenmodule.leaderboard.domain.RankDataSource
+import com.example.leaderboardscreenmodule.leaderboard.entity.RankPagination
+import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardIntent
 import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
 import com.example.leaderboardscreenmodule.leaderboard.uicomponents.CardView
 import com.example.leaderboardscreenmodule.leaderboard.uicomponents.CircleShapeTop
 import com.example.leaderboardscreenmodule.leaderboard.uicomponents.MiddleBar
+import kotlinx.coroutines.Delay
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -81,7 +92,7 @@ import java.util.Locale
 
 fun LeaderBoardScreen(
     leaderBoardViewModel: LeaderBoardViewModel = viewModel(),
-    mockList: List<MockData>,
+    mockList: List<MockData>, navController: NavController,
     modifier: Modifier = Modifier
 ) {
     var showDialog by remember {
@@ -107,6 +118,11 @@ fun LeaderBoardScreen(
         mutableStateOf(false)
     }
 
+    val state = leaderBoardViewModel.state.collectAsState()
+    var isRefreshing = state.value.isRefreshSuccess
+
+    val pullRefreshState = rememberPullToRefreshState()
+
 
     val currentDate = LocalDate.now()
 
@@ -115,252 +131,317 @@ fun LeaderBoardScreen(
     var dateTextTo by remember { mutableStateOf("${currentDate.format(formater)}") }
     var showDatePicker by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
+    var coroutineScope = rememberCoroutineScope()
 
+    var listPage = leaderBoardViewModel.pageConfig.collectAsLazyPagingItems()
+    val firstThreeApiItems = listPage.itemSnapshotList.items.take(3)
+    val hasTop3 = firstThreeApiItems.size == 3
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.linearGradient(
-                    colorStops = arrayOf(
-                        0.1557f to Color(0xFF002F87),
-                        1.0f to Color(0xFF3E97FF)
-                    ),
-                    start = Offset(0f, 0f),
-                    end = Offset(100f, 1400f)
-                )
+    PullToRefreshBox(
+        state = pullRefreshState,
+        isRefreshing = isRefreshing,
+        onRefresh = {
+            coroutineScope.launch { leaderBoardViewModel.onEvent(LeaderBoardIntent.RefreshData)
+                isRefreshing=state.value.isRefreshSuccess
+                delay(1000)
+                leaderBoardViewModel.setRefreshKeyFalse() }
 
-            )
-    ) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-
-        ) {
-
-
-            Box {
-                Box(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(top = 150.dp, start = 19.dp, end = 16.dp)
-                        .height(130.dp)
-                        .width(342.dp)
-                        .clip(shape = RoundedCornerShape(12.dp))
-                        .background(colorResource(id = R.color.blue))
-                )
-                Box(
-                    modifier = modifier
-                        .offset(145.dp, 104.dp)
-                        .height(176.dp)
-                        .width(122.dp)
-                        .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-                        .background(
-                            color = colorResource(
-                                id = R.color.blue_light
-                            )
-                        )
-                )
-
-
-                CircleShapeTop(
-                    show = isVisible3,
-                    x = 305.dp,
-                    y = 110.dp,
-                    mockData = mockList[2],
-                    background_color = R.color.blue_light,
-                )
-                CircleShapeTop(
-                    50.dp, 110.dp,
-                    mockData = mockList[1],
-                    background_color = R.color.orange,
-                    show = isVisible2,
-                )
-                CircleShapeTop(
-                    x = 170.dp,
-                    y = 56.dp,
-                    mockData = mockList[0],
-                    background_color = R.color.yellow,
-                    show = isVisible1,
-                    showNum1 = showKing,
-                )
-
-
-            }
-        }
+        }) {
 
 
         Column(
             modifier = modifier
-                .width(410.dp)
-                .height(800.dp)
-                .clip(RoundedCornerShape(topStart = 19.dp, topEnd = 19.dp))
-                .background(color = Color.White)
-        ) {
-            Spacer(modifier = modifier.padding(21.dp))
-            Row(modifier = modifier) {
-                Column(modifier = modifier.padding(start = 21.dp)) {
-                    Text(
-                        stringResource(id = R.string.ranking),
-                        fontSize = 24.sp,
-                        color = colorResource(id = R.color.black),
-                        fontWeight = FontWeight.Bold
+                .fillMaxSize()
+                .background(
+                    brush = Brush.linearGradient(
+                        colorStops = arrayOf(
+                            0.1557f to Color(0xFF002F87),
+                            1.0f to Color(0xFF3E97FF)
+                        ),
+                        start = Offset(0f, 0f),
+                        end = Offset(100f, 1400f)
                     )
-                    Spacer(modifier = modifier.padding(4.dp))
-                    Row() {
-                        Text(
-                            "(",
-                            fontSize = 16.sp,
-                            color = colorResource(id = R.color.blue_light)
-                        )
-                        Text(
-                            stringResource(id = R.string.myrank),
-                            fontSize = 16.sp,
-                            color = colorResource(id = R.color.blue_light)
-                        )
-                        Spacer(modifier = modifier.padding(6.dp))
-                        Box(contentAlignment = Alignment.Center) {
+
+                )
+        ) {
+
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+
+            ) {
 
 
-                            Image(
-                                painter = painterResource(id = R.drawable.rectangle_6),
-                                contentDescription = null
+                Box {
+                    Box(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(top = 150.dp, start = 19.dp, end = 16.dp)
+                            .height(130.dp)
+                            .width(342.dp)
+                            .clip(shape = RoundedCornerShape(12.dp))
+                            .background(colorResource(id = R.color.blue))
+                    )
+                    Box(
+                        modifier = modifier
+                            .offset(145.dp, 104.dp)
+                            .height(176.dp)
+                            .width(122.dp)
+                            .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
+                            .background(
+                                color = colorResource(
+                                    id = R.color.blue_light
+                                )
+                            )
+                    )
+
+                    if (hasTop3) {
+                        CircleShapeTop(
+                            show = isVisible3,
+                            x = 305.dp,
+                            y = 110.dp,
+                            dummyDataUiModel = firstThreeApiItems[2],
+                            background_color = R.color.blue_light,
+                        )
+                        CircleShapeTop(
+                            50.dp, 110.dp,
+                            dummyDataUiModel = firstThreeApiItems[1],
+                            background_color = R.color.orange,
+                            show = isVisible2,
+                        )
+                        CircleShapeTop(
+                            x = 170.dp,
+                            y = 56.dp,
+                            dummyDataUiModel = firstThreeApiItems[0],
+                            background_color = R.color.yellow,
+                            show = isVisible1,
+                            showNum1 = showKing,
+                        )
+                    }
+
+
+                }
+            }
+
+
+            Column(
+                modifier = modifier
+                    .width(410.dp)
+                    .height(800.dp)
+                    .clip(RoundedCornerShape(topStart = 19.dp, topEnd = 19.dp))
+                    .background(color = Color.White)
+            ) {
+                Spacer(modifier = modifier.padding(21.dp))
+                Row(modifier = modifier) {
+                    Column(modifier = modifier.padding(start = 21.dp)) {
+                        Text(
+                            stringResource(id = R.string.ranking),
+                            fontSize = 24.sp,
+                            color = colorResource(id = R.color.black),
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = modifier.padding(4.dp))
+                        Row() {
+                            Text(
+                                "(",
+                                fontSize = 16.sp,
+                                color = colorResource(id = R.color.blue_light)
                             )
                             Text(
-                                text = mockList.size.toString(),
-                                color = Color.White,
-                                fontSize = 10.sp
+                                stringResource(id = R.string.myrank),
+                                fontSize = 16.sp,
+                                color = colorResource(id = R.color.blue_light)
+                            )
+                            Spacer(modifier = modifier.padding(6.dp))
+                            Box(contentAlignment = Alignment.Center) {
+
+
+                                Image(
+                                    painter = painterResource(id = R.drawable.rectangle_6),
+                                    contentDescription = null
+                                )
+                                Text(
+                                    text = mockList.size.toString(),
+                                    color = Color.White,
+                                    fontSize = 10.sp
+                                )
+                            }
+                            Text(
+                                ")",
+                                fontSize = 16.sp,
+                                color = colorResource(id = R.color.blue_light)
                             )
                         }
-                        Text(
-                            ")",
-                            fontSize = 16.sp,
-                            color = colorResource(id = R.color.blue_light)
-                        )
+                        Spacer(modifier = modifier.padding(12.dp))
                     }
-                    Spacer(modifier = modifier.padding(12.dp))
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End,
-                    modifier = modifier
-                        .padding(top = 25.dp, end = 25.dp)
-                        .fillMaxWidth()
-                ) {
                     Row(
-                        modifier = modifier.clickable { showDialog = true },
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End,
+                        modifier = modifier
+                            .padding(top = 25.dp, end = 25.dp)
+                            .fillMaxWidth()
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.general),
-                            contentDescription = null,
-                            modifier = modifier
-                                .height(17.dp)
-                                .width(14.dp)
-                        )
-                        Spacer(modifier = modifier.padding(8.dp))
-                        Text(text = stringResource(id = R.string.filter))
+                        Row(
+                            modifier = modifier.clickable { showDialog = true },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.general),
+                                contentDescription = null,
+                                modifier = modifier
+                                    .height(17.dp)
+                                    .width(14.dp)
+                            )
+                            Spacer(modifier = modifier.padding(8.dp))
+                            Text(text = stringResource(id = R.string.filter))
+                        }
+
                     }
 
+
                 }
+                HorizontalDivider(
+                    color = Color.LightGray, modifier = modifier
+                        .fillMaxWidth()
+                        .padding(start = 21.dp, end = 12.dp)
+                )
+
+                Spacer(modifier = modifier.padding(top = 16.dp))
+                LazyColumnForData(mockData = mockList, viewModel = leaderBoardViewModel)
 
 
             }
-            HorizontalDivider(
-                color = Color.LightGray, modifier = modifier
-                    .fillMaxWidth()
-                    .padding(start = 21.dp, end = 12.dp)
-            )
 
-            Spacer(modifier = modifier.padding(top = 16.dp))
-            LazyColumn(viewModel = leaderBoardViewModel)
+            if (showDialog) {
+                LeaderBoarderDialog(
+                    name = name,
+                    dateTextFrom = dateTextFrom,
+                    onDateTextFromChange = { dateTextFrom = it },
+                    dateTextTo = dateTextTo,
+                    onDateTextToChange = { dateTextTo = it },
+                    onDismess = { showDialog = false },
+                    onNameChange = { name = it }, show = showDialog, navController = navController,
+                    onShowDatePicker = { FromTextField, show ->
+                        if (FromTextField) {
+                            isDateTextFrom = true
+                            showDatePicker = show
+                        } else {
+                            isDateTextTo = true
+                            showDatePicker = show
+                        }
+                    }
+                )
+            }
 
-
-        }
-
-        if (showDialog) {
-            LeaderBoarderDialog(
-                name = name,
-                dateTextFrom = dateTextFrom,
-                onDateTextFromChange = { dateTextFrom = it },
-                dateTextTo = dateTextTo,
-                onDateTextToChange = { dateTextTo = it },
-                onDismess = { showDialog = false },
-                onNameChange = { name = it }, show = showDialog,
-                onShowDatePicker = { FromTextField, show ->
-                    if (FromTextField) {
-                        isDateTextFrom = true
-                        showDatePicker = show
+            if (showDatePicker) {
+                DatePickerChooser(onConfirm = {
+                    val c = Calendar.getInstance()
+                    c.timeInMillis =
+                        it.selectedDateMillis!! // calender class is used to convert from ms to date
+                    val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.US)
+                    if (isDateTextFrom) {
+                        dateTextFrom = dateFormatter.format(c.time)
                     } else {
-                        isDateTextTo = true
-                        showDatePicker = show
+                        if (isDateTextFrom != null) {
+
+                            dateTextTo = dateFormatter.format(c.time)
+                        }
                     }
-                }
-            )
-        }
 
-        if (showDatePicker) {
-            DatePickerChooser(onConfirm = {
-                val c = Calendar.getInstance()
-                c.timeInMillis =
-                    it.selectedDateMillis!! // calender class is used to convert from ms to date
-                val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.US)
-                if (isDateTextFrom) {
-                    dateTextFrom = dateFormatter.format(c.time)
-                } else {
-                    if (isDateTextFrom != null) {
-
-                        dateTextTo = dateFormatter.format(c.time)
-                    }
-                }
-
-                showDatePicker = false
-                isDateTextFrom = false
-                isDateTextTo = false
-            }, dateTextTo = dateTextTo,
-                dateTextFrom = dateTextFrom,
-                isDateTextTo = isDateTextTo, onDismiss = {
                     showDatePicker = false
                     isDateTextFrom = false
                     isDateTextTo = false
-                })
+                }, dateTextTo = dateTextTo,
+                    dateTextFrom = dateTextFrom,
+                    isDateTextTo = isDateTextTo, onDismiss = {
+                        showDatePicker = false
+                        isDateTextFrom = false
+                        isDateTextTo = false
+                    })
+            }
+
+        }
+    }
+
+
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
+            isVisible1 = false
+            isVisible2 = false
+            isVisible3 = false
+            showKing = false
         }
 
+            // Optional: small delay to allow recomposition
+            delay(500)
+            isVisible3 = true
+            delay(1000)
+            isVisible2 = true
+            delay(1000)
+            isVisible1 = true
+            delay(1000)
+            showKing = true
+        }
     }
 
-
-    LaunchedEffect(Unit) {
-        delay(500)
-        isVisible3 = true
-        delay(1000)
-        isVisible2 = true
-        delay(1000)
-        isVisible1 = true
-        delay(1000)
-        showKing = true
-    }
-}
 
 
 @Composable
-fun LazyColumn(viewModel: LeaderBoardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun LazyColumnForData(
+    mockData: List<MockData>,
+    viewModel: LeaderBoardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     //val list by viewModel.state.collectAsState()
 
     val listPage = viewModel.pageConfig.collectAsLazyPagingItems()
     var lastIndex: Boolean = false;
     var listState = rememberLazyListState()
-
     var count by remember {
         mutableStateOf(0)
     }
+
 
     LazyColumn {
 
         items(listPage.itemCount) { item ->
             lastIndex = item == listPage.itemCount - 1
-            listPage[item]?.let { dummy ->
-                CardView(dummy)
+            listPage[item]?.let {
+                dummy ->
+                if(dummy.id >3) {
+                    CardView(mockData = mockData[1], dummyDataUiModel = dummy)
+                }
             }
+            listPage.apply {
+                if (lastIndex) {
+                    when {
+                        loadState.refresh is LoadState.Loading -> {
+
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .offset(x = 180.dp)
+                                    .padding(8.dp)
+                            )
+
+                        }
+
+                        loadState.append is LoadState.Loading -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .offset(x = 180.dp)
+                                    .padding(8.dp)
+                            )
+                        }
+
+                        loadState.refresh is LoadState.Error -> {
+                            val e = loadState.refresh as LoadState.Error
+                            // Handle error
+                        }
+                    }
+                }
+            }
+
 
 
             Log.d("PagingDebug", "index $lastIndex")
@@ -375,23 +456,11 @@ fun LazyColumn(viewModel: LeaderBoardViewModel = androidx.lifecycle.viewmodel.co
 //            }
 
         }
-        if (
-            listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == listPage.itemCount - 1
-        ) {
-            item {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .offset(x = 180.dp)
-                        .padding(8.dp)
-                )
-            }
-
-
-        }
 
 
     }
+
+
 }
 
 

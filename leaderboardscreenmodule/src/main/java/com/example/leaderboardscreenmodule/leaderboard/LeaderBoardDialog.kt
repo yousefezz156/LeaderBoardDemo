@@ -44,8 +44,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import com.example.leaderboardscreenmodule.R
+import com.example.leaderboardscreenmodule.leaderboard.filterscreen.FilterScreen
+import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
+import com.google.gson.Gson
 import kotlinx.coroutines.delay
+import kotlin.reflect.KProperty
+
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,8 +65,13 @@ fun LeaderBoarderDialog(
     onDateTextToChange: (String) -> Unit,
     onDismess: () -> Unit,
     onNameChange: (String) -> Unit, show: Boolean,
-    onShowDatePicker: (Boolean, Boolean) -> Unit, modifier: Modifier = Modifier
+    onShowDatePicker: (Boolean, Boolean) -> Unit,
+    navController: NavController,modifier: Modifier = Modifier
 ) {
+
+    var filterDataList by remember {
+        mutableStateOf<List<MockData>>(emptyList())
+    }
 
 
 
@@ -109,11 +121,14 @@ fun LeaderBoarderDialog(
                             .fillMaxWidth()
                             .padding(start = 20.dp, end = 20.dp)
                             .clip(shape = RoundedCornerShape(12.dp)),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = colorResource(id = R.color.semi_white),
-                            unfocusedBorderColor = colorResource(id = R.color.semi_white),
-                            containerColor = colorResource(id = R.color.semi_white)
-
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = colorResource(id = R.color.semi_white),
+                            unfocusedContainerColor = colorResource(id = R.color.semi_white),
+                            focusedIndicatorColor = colorResource(id = R.color.semi_white),
+                            unfocusedIndicatorColor = colorResource(id = R.color.semi_white),
+                            cursorColor = colorResource(id = R.color.purple),
+                            focusedLabelColor = colorResource(id = R.color.purple),
+                            unfocusedLabelColor = colorResource(id = R.color.purple)
                         ),
                         textStyle = TextStyle(color = Color.Black)
 
@@ -182,10 +197,14 @@ fun LeaderBoarderDialog(
                                         color = colorResource(id = R.color.semi_white),
                                         shape = RoundedCornerShape(12.dp)
                                     ),
-                                colors = TextFieldDefaults.textFieldColors(
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = colorResource(id = R.color.semi_white),
+                                    unfocusedContainerColor = colorResource(id = R.color.semi_white),
                                     focusedIndicatorColor = colorResource(id = R.color.semi_white),
                                     unfocusedIndicatorColor = colorResource(id = R.color.semi_white),
-                                    containerColor = colorResource(id = R.color.semi_white)
+                                    cursorColor = colorResource(id = R.color.purple),
+                                    focusedLabelColor = colorResource(id = R.color.purple),
+                                    unfocusedLabelColor = colorResource(id = R.color.purple)
                                 ),
                                 textStyle = TextStyle(
                                     textAlign = TextAlign.Justify,
@@ -220,10 +239,14 @@ fun LeaderBoarderDialog(
                                         color = colorResource(id = R.color.semi_white),
                                         shape = RoundedCornerShape(12.dp)
                                     ),
-                                colors = TextFieldDefaults.textFieldColors(
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = colorResource(id = R.color.semi_white),
+                                    unfocusedContainerColor = colorResource(id = R.color.semi_white),
                                     focusedIndicatorColor = colorResource(id = R.color.semi_white),
                                     unfocusedIndicatorColor = colorResource(id = R.color.semi_white),
-                                    containerColor = colorResource(id = R.color.semi_white)
+                                    cursorColor = colorResource(id = R.color.purple),
+                                    focusedLabelColor = colorResource(id = R.color.purple),
+                                    unfocusedLabelColor = colorResource(id = R.color.purple)
                                 ),
                                 textStyle = TextStyle(
                                     textAlign = TextAlign.Justify,
@@ -258,7 +281,12 @@ fun LeaderBoarderDialog(
 //            )
                     Spacer(modifier = modifier.padding(8.dp))
                     Button(
-                        onClick = onDismess,
+                        onClick = {
+                           filterDataList=filterList(name,dateTextFrom,dateTextTo)
+                            val gson =Gson()
+                            val json = gson.toJson(filterDataList)
+                            navController.navigate("filter_data_screen/${json}")
+                                  },
                         modifier = modifier
                             .fillMaxWidth()
                             .padding(start = 16.dp, end = 18.dp, bottom = 22.dp),

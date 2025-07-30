@@ -3,18 +3,23 @@ package com.example.leaderboardscreenmodule.approutes
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.leaderboardscreenmodule.leaderboard.filterscreen.FilterScreen
 import com.example.leaderboardscreenmodule.leaderboard.LeaderBoardScreen
 import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
+import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 object AppRoutes {
 
     const val LEADERBOARD = "leader_board"
+    const val FILTERDATASCREEN ="filter_data_screen"
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -26,8 +31,17 @@ fun AppNav() {
         composable(route = AppRoutes.LEADERBOARD) {
             LeaderBoardScreen(
                 leaderBoardViewModel = leaderBoardViewModel,
-                mockList = MockList().getList()
+                mockList = MockList().getList(),
+                navController=navController
             )
         }
+        composable(route="${AppRoutes.FILTERDATASCREEN}/{json}", arguments = listOf(navArgument("json"){NavType.StringArrayType})){
+            backStackEntry ->
+            val json = backStackEntry.arguments?.getString("json")
+            val listType = object : TypeToken<List<MockData>>() {}.type
+            val filterData: List<MockData> = Gson().fromJson(json, listType)
+            FilterScreen(filterList = filterData,navController)
+        }
+
+        }
     }
-}

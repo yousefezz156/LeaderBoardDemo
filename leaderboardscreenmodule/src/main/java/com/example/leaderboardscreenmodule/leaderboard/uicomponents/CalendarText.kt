@@ -50,11 +50,15 @@ fun CalendatTextfilled(dateTextFrom: String, dateTextTo: String,upperLabel: Int,
             1.dp,
             color = colorResource(id = R.color.semi_white),
             shape = RoundedCornerShape(12.dp)
-        ), colors = TextFieldDefaults.textFieldColors(
-            focusedIndicatorColor = colorResource(id = R.color.semi_white),
-            unfocusedIndicatorColor = colorResource(id = R.color.semi_white),
-            containerColor = colorResource(id = R.color.semi_white)
-        ), textStyle = TextStyle(textAlign = TextAlign.Justify)
+        ), colors = TextFieldDefaults.colors(
+        focusedContainerColor = colorResource(id = R.color.semi_white),
+        unfocusedContainerColor = colorResource(id = R.color.semi_white),
+        focusedIndicatorColor = colorResource(id = R.color.semi_white),
+        unfocusedIndicatorColor = colorResource(id = R.color.semi_white),
+        cursorColor = colorResource(id = R.color.purple),
+        focusedLabelColor = colorResource(id = R.color.purple),
+        unfocusedLabelColor = colorResource(id = R.color.purple)
+    ), textStyle = TextStyle(textAlign = TextAlign.Justify)
     )
 
 }

@@ -29,14 +29,12 @@ import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText
 
 @Composable
-fun CardView(/*mockData: MockData*/dummyDataUiModel: DummyDataUiModel, modifier: Modifier = Modifier) {
+fun CardView(mockData: MockData ,dummyDataUiModel: DummyDataUiModel, modifier: Modifier = Modifier) {
 
-    var rank by remember{
-        mutableStateOf(4)
-    }
-    var score by remember{
-        mutableStateOf(1296)
-    }
+   var score by remember {
+       mutableStateOf(mockData.score)
+   }
+
     Column() {
         Row(
             modifier = modifier
@@ -44,11 +42,11 @@ fun CardView(/*mockData: MockData*/dummyDataUiModel: DummyDataUiModel, modifier:
                 .padding(start = 21.dp, end = 12.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             Box(contentAlignment = Alignment.Center, modifier = modifier.width(30.dp)){
-                Text(text = rank.toString(), color = Color.Black)
+                Text(text = dummyDataUiModel.id.toString(), color = Color.Black)
             }
 
             Spacer(modifier = modifier.padding(4.dp))
-            CircleShapeForRank(dummyDataUiModel)
+            CircleShapeForRank(mockData = mockData,dummyDataUiModel=dummyDataUiModel)
             Spacer(modifier = modifier.padding(12.dp))
             Text(text = dummyDataUiModel.firstName, color = Color.Black)
             Spacer(modifier = modifier.padding(13.dp))
@@ -59,7 +57,7 @@ fun CardView(/*mockData: MockData*/dummyDataUiModel: DummyDataUiModel, modifier:
             }
         }
 
-        if(rank !=10) {
+        if(dummyDataUiModel.id != 12) {
             Divider(
                 color = colorResource(id = R.color.grey),
                 modifier = modifier
@@ -70,7 +68,6 @@ fun CardView(/*mockData: MockData*/dummyDataUiModel: DummyDataUiModel, modifier:
             Spacer(modifier = modifier.padding(bottom = 12.dp))
         }
     }
-
 }
 
 @Preview(showBackground = true)

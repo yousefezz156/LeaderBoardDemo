@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-kapt")
+    id("kotlin-parcelize")
 
     alias(libs.plugins.jetbrains.kotlin.android)
 }
@@ -82,4 +83,6 @@ dependencies {
     //Paging
     implementation("androidx.paging:paging-compose:3.3.0")
     implementation("androidx.paging:paging-runtime-ktx:3.3.0")
+
+    //Swipe refresh
 }

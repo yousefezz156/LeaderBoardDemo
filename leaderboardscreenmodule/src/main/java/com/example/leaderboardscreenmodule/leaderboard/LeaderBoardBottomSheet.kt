@@ -96,11 +96,14 @@ fun LeaderBoardBottomSheet(
                     .fillMaxWidth()
                     .padding(start = 20.dp, end = 20.dp)
                     .clip(shape = RoundedCornerShape(12.dp)),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = colorResource(id = R.color.semi_white),
-                    unfocusedBorderColor = colorResource(id = R.color.semi_white),
-                    containerColor = colorResource(id = R.color.semi_white)
-
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = colorResource(id = R.color.semi_white),
+                    unfocusedContainerColor = colorResource(id = R.color.semi_white),
+                    focusedIndicatorColor = colorResource(id = R.color.semi_white),
+                    unfocusedIndicatorColor = colorResource(id = R.color.semi_white),
+                    cursorColor = colorResource(id = R.color.purple),
+                    focusedLabelColor = colorResource(id = R.color.purple),
+                    unfocusedLabelColor = colorResource(id = R.color.purple)
                 )
 
             )
@@ -159,10 +162,14 @@ fun LeaderBoardBottomSheet(
                                 color = colorResource(id = R.color.semi_white),
                                 shape = RoundedCornerShape(12.dp)
                             ),
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = colorResource(id = R.color.semi_white),
+                            unfocusedContainerColor = colorResource(id = R.color.semi_white),
                             focusedIndicatorColor = colorResource(id = R.color.semi_white),
                             unfocusedIndicatorColor = colorResource(id = R.color.semi_white),
-                            containerColor = colorResource(id = R.color.semi_white)
+                            cursorColor = colorResource(id = R.color.purple),
+                            focusedLabelColor = colorResource(id = R.color.purple),
+                            unfocusedLabelColor = colorResource(id = R.color.purple)
                         ),
                         textStyle = TextStyle(textAlign = TextAlign.Justify)
                     )
@@ -192,10 +199,14 @@ fun LeaderBoardBottomSheet(
                                 color = colorResource(id = R.color.semi_white),
                                 shape = RoundedCornerShape(12.dp)
                             ),
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = colorResource(id = R.color.semi_white),
+                            unfocusedContainerColor = colorResource(id = R.color.semi_white),
                             focusedIndicatorColor = colorResource(id = R.color.semi_white),
                             unfocusedIndicatorColor = colorResource(id = R.color.semi_white),
-                            containerColor = colorResource(id = R.color.semi_white)
+                            cursorColor = colorResource(id = R.color.purple),
+                            focusedLabelColor = colorResource(id = R.color.purple),
+                            unfocusedLabelColor = colorResource(id = R.color.purple)
                         ),
                         textStyle = TextStyle(textAlign = TextAlign.Justify)
                     )

@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.example.leaderboardscreenmodule.DumyApi.DummyDataUiModel
 import com.example.leaderboardscreenmodule.R
 import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
 import kotlinx.coroutines.delay
@@ -61,7 +62,8 @@ import kotlinx.coroutines.delay
 fun CircleShapeTop(
     x: Dp,
     y: Dp,
-    mockData: MockData,
+    //mockData: MockData,
+    dummyDataUiModel: DummyDataUiModel,
     background_color: Int,
     show: Boolean,
     showNum1: Boolean = false,
@@ -114,11 +116,11 @@ fun CircleShapeTop(
 
                 Box(
                     Modifier
-                        .size(if (mockData.rank == 2 || mockData.rank == 3) 54.dp else 73.dp)
+                        .size(if (dummyDataUiModel.id == 2 || dummyDataUiModel.id  == 3) 54.dp else 73.dp)
                         .clip(shape = androidx.compose.foundation.shape.CircleShape)
                         .border(
                             2.dp,
-                            color = if (mockData.rank == 1) colorResource(id = R.color.dark_yello) else if (mockData.rank == 2) colorResource(
+                            color = if (dummyDataUiModel.id  == 1) colorResource(id = R.color.dark_yello) else if (dummyDataUiModel.id == 2) colorResource(
                                 id = R.color.dark_orange
                             ) else colorResource(id = R.color.semi_light_blue),
                             androidx.compose.foundation.shape.CircleShape
@@ -133,18 +135,18 @@ fun CircleShapeTop(
 
                     var two_words = "";
 
-                    two_words += mockData.first_name.toCharArray()[0]
-                    two_words += mockData.last_name.toCharArray()[0]
+                    two_words += dummyDataUiModel.firstName.toCharArray()[0]
+                    two_words += dummyDataUiModel.lastName.toCharArray()[0]
                     two_words = two_words.uppercase()
                     Text(text = two_words, color = Color.White, fontSize = 24.sp)
 
                 }
-                Spacer(modifier = modifier.padding(top = if (mockData.rank == 1) 10.dp else 5.dp))
-                MockInfo(name = "Yousef", score = 1234, rank = mockData.rank, show = show)
+                Spacer(modifier = modifier.padding(top = if (dummyDataUiModel.id == 1) 10.dp else 5.dp))
+                MockInfo(name = "Yousef", score = 1234, rank = dummyDataUiModel.id, show = show)
             }
         }
 
-        if (mockData.rank == 1) {
+        if (dummyDataUiModel.id  == 1) {
             AnimatedVisibility(
                 visible = showNum1,
                 enter = slideInVertically {
