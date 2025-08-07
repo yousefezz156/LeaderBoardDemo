@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi
 
 import com.example.leaderboardscreenmodule.DumyApi.DataApiServices
 import com.example.leaderboardscreenmodule.DumyApi.DataResponse
@@ -6,8 +6,8 @@ import com.example.leaderboardscreenmodule.leaderboard.domain.RankDetailsApi
 import com.example.leaderboardscreenmodule.core.Network.BaseForListResponse
 import com.example.leaderboardscreenmodule.core.Network.NetworkModule
 import com.example.leaderboardscreenmodule.leaderboard.entity.ApiResponse.RanksInfo
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.MockData
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.MockList
 
 class LeaderBoarderRepository(
     private val mockList: MockList = MockList(),

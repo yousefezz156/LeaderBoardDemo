@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.leaderboard
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents
 
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog

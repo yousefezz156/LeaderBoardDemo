@@ -1,17 +1,13 @@
-package com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
 import androidx.paging.cachedIn
-import com.example.leaderboardscreenmodule.DumyApi.DataApiServices
 import com.example.leaderboardscreenmodule.DumyApi.DummyDataUseCase
 import com.example.leaderboardscreenmodule.leaderboard.domain.LeaderBoardUseCase
 import com.example.leaderboardscreenmodule.leaderboard.domain.RankDataSource
-import com.example.leaderboardscreenmodule.leaderboard.domain.RankDetailsApi
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
 import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,9 +72,10 @@ class LeaderBoardViewModel(
 
     fun getLeaderBoardData() {
         viewModelScope.launch(Dispatchers.IO) {
+
             try {
-                _state.value = _state.value.copy(list = leaderBoarderRepository.getMockList())
-                _state.value = _state.value.copy(isRefreshSuccess = true)
+
+                _state.value = _state.value.copy(list = leaderBoarderRepository.getMockList(), isRefreshSuccess = true)
             } catch (e: Exception) {
                 _state.value = _state.value.copy(error = e.message.toString())
             }

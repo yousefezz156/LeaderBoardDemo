@@ -8,11 +8,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.leaderboardscreenmodule.leaderboard.filterscreen.FilterScreen
-import com.example.leaderboardscreenmodule.leaderboard.LeaderBoardScreen
-import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.FilterScreen
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.LeaderBoardScreen
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi.LeaderBoardViewModel
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.MockData
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.MockList
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -31,7 +31,6 @@ fun AppNav() {
         composable(route = AppRoutes.LEADERBOARD) {
             LeaderBoardScreen(
                 leaderBoardViewModel = leaderBoardViewModel,
-                mockList = MockList().getList(),
                 navController=navController
             )
         }

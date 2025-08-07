@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi
 
 sealed class LeaderBoardIntent {
     object GetData: LeaderBoardIntent()

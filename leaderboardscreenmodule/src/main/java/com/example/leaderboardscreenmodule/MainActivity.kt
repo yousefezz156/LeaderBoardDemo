@@ -37,11 +37,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi.LeaderBoardViewModel
 //import com.example.leaderboarddemo.leaderboard.leaderboardmvi.LeaderBoardViewModelFactory
 import kotlinx.coroutines.delay
 
 internal class MainActivity : ComponentActivity() {
-    private lateinit var viewModel: com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
+    private lateinit var viewModel: LeaderBoardViewModel
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

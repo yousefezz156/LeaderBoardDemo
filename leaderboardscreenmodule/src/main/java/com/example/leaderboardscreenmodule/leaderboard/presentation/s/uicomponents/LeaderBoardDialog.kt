@@ -1,11 +1,7 @@
-package com.example.leaderboardscreenmodule.leaderboard
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,15 +41,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.leaderboardscreenmodule.R
-import com.example.leaderboardscreenmodule.leaderboard.filterscreen.FilterScreen
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
+import com.example.leaderboardscreenmodule.leaderboard.filterList
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.MockData
 import com.google.gson.Gson
-import kotlinx.coroutines.delay
-import kotlin.reflect.KProperty
 
 
-
-
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LeaderBoarderDialog(
@@ -173,7 +165,7 @@ fun LeaderBoarderDialog(
                             Spacer(modifier = modifier.padding(8.dp))
                             TextField(
                                 value = dateTextFrom,
-                                onValueChange = onDateTextFromChange, readOnly = true,
+                                onValueChange = onDateTextFromChange,
                                 trailingIcon = {
                                     IconButton(onClick = {
                                         onShowDatePicker(
@@ -218,7 +210,7 @@ fun LeaderBoarderDialog(
                             Text(text = stringResource(id = R.string.to), color = Color.Black)
                             Spacer(modifier = modifier.padding(8.dp))
                             TextField(
-                                value = dateTextTo, readOnly = true,
+                                value = dateTextTo,
                                 onValueChange = onDateTextToChange,
                                 trailingIcon = {
                                     IconButton(onClick = {
@@ -282,7 +274,7 @@ fun LeaderBoarderDialog(
                     Spacer(modifier = modifier.padding(8.dp))
                     Button(
                         onClick = {
-                           filterDataList=filterList(name,dateTextFrom,dateTextTo)
+                           filterDataList= filterList(name,dateTextFrom,dateTextTo)
                             val gson =Gson()
                             val json = gson.toJson(filterDataList)
                             navController.navigate("filter_data_screen/${json}")

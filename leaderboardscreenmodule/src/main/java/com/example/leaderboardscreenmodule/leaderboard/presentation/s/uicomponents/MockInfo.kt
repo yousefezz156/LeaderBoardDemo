@@ -1,9 +1,5 @@
-package com.example.leaderboardscreenmodule.leaderboard.uicomponents
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.uicomponents
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +13,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.leaderboardscreenmodule.R
-import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText
 
 @Composable
 fun MockInfo(name: String, score: Int, rank: Int, show:Boolean,modifier: Modifier = Modifier) {

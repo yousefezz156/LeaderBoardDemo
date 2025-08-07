@@ -3,9 +3,9 @@ package com.example.leaderboardscreenmodule.leaderboard.domain
 import com.example.leaderboardscreenmodule.leaderboard.entity.RankUiModel
 import com.example.leaderboardscreenmodule.leaderboard.entity.ApiResponse.RanksInfo
 import com.example.leaderboardscreenmodule.leaderboard.entity.RankPagination
-import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoarderRepository
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi.LeaderBoarderRepository
 
-class LeaderBoardUseCase(private val leaderBoardRepo:LeaderBoarderRepository = LeaderBoarderRepository()) {
+class LeaderBoardUseCase(private val leaderBoardRepo: LeaderBoarderRepository = LeaderBoarderRepository()) {
 
     suspend fun rankpagination(page :Int, itemPerPage:Int): RankPagination{
         var modelList = arrayListOf<RankUiModel>()

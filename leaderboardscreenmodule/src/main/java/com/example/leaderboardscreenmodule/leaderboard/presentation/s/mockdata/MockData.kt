@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.leaderboard.mockdata
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata
 
 
 data class MockData(

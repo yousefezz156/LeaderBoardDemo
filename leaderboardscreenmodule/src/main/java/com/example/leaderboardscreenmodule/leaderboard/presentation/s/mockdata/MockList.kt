@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.leaderboard.mockdata
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata
 
 import androidx.compose.ui.graphics.toArgb
 import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText

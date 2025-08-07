@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.leaderboard
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.uicomponents
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,7 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.leaderboardscreenmodule.R
-import com.example.leaderboardscreenmodule.leaderboard.uicomponents.DateButton
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents.DateButton
 
 
 @OptIn(ExperimentalMaterial3Api::class)

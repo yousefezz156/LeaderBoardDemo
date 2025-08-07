@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.leaderboard
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s
 
 
 import android.os.Build
@@ -19,26 +19,18 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
-import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -53,33 +45,26 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.leaderboardscreenmodule.DumyApi.DummyDataUiModel
 import com.example.leaderboardscreenmodule.R
-import com.example.leaderboardscreenmodule.leaderboard.domain.RankDataSource
-import com.example.leaderboardscreenmodule.leaderboard.entity.RankPagination
-import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardIntent
-import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoardViewModel
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
-import com.example.leaderboardscreenmodule.leaderboard.uicomponents.CardView
-import com.example.leaderboardscreenmodule.leaderboard.uicomponents.CircleShapeTop
-import com.example.leaderboardscreenmodule.leaderboard.uicomponents.MiddleBar
-import kotlinx.coroutines.Delay
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi.LeaderBoardIntent
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi.LeaderBoardViewModel
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.MockData
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents.CardView
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents.CircleShapeTop
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents.DatePickerChooser
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents.LeaderBoarderDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 
@@ -91,8 +76,8 @@ import java.util.Locale
          */
 
 fun LeaderBoardScreen(
-    leaderBoardViewModel: LeaderBoardViewModel = viewModel(),
-    mockList: List<MockData>, navController: NavController,
+    leaderBoardViewModel: LeaderBoardViewModel,
+     navController: NavController,
     modifier: Modifier = Modifier
 ) {
     var showDialog by remember {
@@ -127,13 +112,13 @@ fun LeaderBoardScreen(
     val currentDate = LocalDate.now()
 
     val formater = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-    var dateTextFrom by remember { mutableStateOf("${currentDate.format(formater)}") }
-    var dateTextTo by remember { mutableStateOf("${currentDate.format(formater)}") }
+    var dateTextFrom by remember { mutableStateOf(currentDate.format(formater)) }
+    var dateTextTo by remember { mutableStateOf(currentDate.format(formater)) }
     var showDatePicker by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
-    var coroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
-    var listPage = leaderBoardViewModel.pageConfig.collectAsLazyPagingItems()
+    val listPage = leaderBoardViewModel.pageConfig.collectAsLazyPagingItems()
     val firstThreeApiItems = listPage.itemSnapshotList.items.take(3)
     val hasTop3 = firstThreeApiItems.size == 3
 
@@ -241,7 +226,7 @@ fun LeaderBoardScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = modifier.padding(4.dp))
-                        Row() {
+                        Row {
                             Text(
                                 "(",
                                 fontSize = 16.sp,
@@ -261,7 +246,7 @@ fun LeaderBoardScreen(
                                     contentDescription = null
                                 )
                                 Text(
-                                    text = mockList.size.toString(),
+                                    text = "12",
                                     color = Color.White,
                                     fontSize = 10.sp
                                 )
@@ -307,7 +292,7 @@ fun LeaderBoardScreen(
                 )
 
                 Spacer(modifier = modifier.padding(top = 16.dp))
-                LazyColumnForData(mockData = mockList, viewModel = leaderBoardViewModel)
+                LazyColumnForData( viewModel = leaderBoardViewModel)
 
 
             }
@@ -321,8 +306,8 @@ fun LeaderBoardScreen(
                     onDateTextToChange = { dateTextTo = it },
                     onDismess = { showDialog = false },
                     onNameChange = { name = it }, show = showDialog, navController = navController,
-                    onShowDatePicker = { FromTextField, show ->
-                        if (FromTextField) {
+                    onShowDatePicker = { fromTextField, show ->
+                        if (fromTextField) {
                             isDateTextFrom = true
                             showDatePicker = show
                         } else {
@@ -388,63 +373,45 @@ fun LeaderBoardScreen(
 
 @Composable
 fun LazyColumnForData(
-    mockData: List<MockData>,
-    viewModel: LeaderBoardViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: LeaderBoardViewModel
 ) {
     //val list by viewModel.state.collectAsState()
 
     val listPage = viewModel.pageConfig.collectAsLazyPagingItems()
-    var lastIndex: Boolean = false;
-    var listState = rememberLazyListState()
-    var count by remember {
-        mutableStateOf(0)
-    }
+    var lastIndex: Boolean
+
 
 
     LazyColumn {
 
-        items(listPage.itemCount) { item ->
-            lastIndex = item == listPage.itemCount - 1
-            listPage[item]?.let {
-                dummy ->
-                if(dummy.id >3) {
-                    CardView(mockData = mockData[1], dummyDataUiModel = dummy)
+        items(listPage.itemCount) { items ->
+            lastIndex = items == listPage.itemCount - 1
+            listPage[items]?.let { dummy ->
+                if (dummy.id > 3) {
+                    CardView(dummyDataUiModel = dummy)
                 }
             }
-            listPage.apply {
-                if (lastIndex) {
-                    when {
-                        loadState.refresh is LoadState.Loading -> {
-
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .size(50.dp)
-                                    .offset(x = 180.dp)
-                                    .padding(8.dp)
-                            )
-
-                        }
-
-                        loadState.append is LoadState.Loading -> {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .size(50.dp)
-                                    .offset(x = 180.dp)
-                                    .padding(8.dp)
-                            )
-                        }
-
-                        loadState.refresh is LoadState.Error -> {
-                            val e = loadState.refresh as LoadState.Error
-                            // Handle error
-                        }
-                    }
-                }
-            }
-
-
-
             Log.d("PagingDebug", "index $lastIndex")
+        }
+
+            when {
+                listPage.loadState.append is LoadState.Loading -> {
+                    item {   CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .offset(x = 180.dp)
+                            .padding(8.dp)
+                    )
+                    }
+
+                }
+            }
+
+
+
+
+
+
 
 //            if(listPage.loadState.append is LoadState.Loading  ){
 //                CircularProgressIndicator(
@@ -461,7 +428,7 @@ fun LazyColumnForData(
     }
 
 
-}
+
 
 
 //@RequiresApi(Build.VERSION_CODES.O)

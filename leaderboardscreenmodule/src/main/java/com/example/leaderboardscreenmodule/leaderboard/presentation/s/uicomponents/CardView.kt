@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.leaderboard.uicomponents
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,17 +24,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.leaderboardscreenmodule.DumyApi.DummyDataUiModel
 import com.example.leaderboardscreenmodule.R
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
-import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.MockData
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.uicomponents.CircleShapeForRank
 
 @Composable
-fun CardView(mockData: MockData ,dummyDataUiModel: DummyDataUiModel, modifier: Modifier = Modifier) {
+fun CardView( dummyDataUiModel: DummyDataUiModel, modifier: Modifier = Modifier) {
 
    var score by remember {
-       mutableStateOf(mockData.score)
+       mutableStateOf(1232)
    }
 
-    Column() {
+    Column {
         Row(
             modifier = modifier
                 .fillMaxWidth()
@@ -46,7 +45,7 @@ fun CardView(mockData: MockData ,dummyDataUiModel: DummyDataUiModel, modifier: M
             }
 
             Spacer(modifier = modifier.padding(4.dp))
-            CircleShapeForRank(mockData = mockData,dummyDataUiModel=dummyDataUiModel)
+            CircleShapeForRank(dummyDataUiModel=dummyDataUiModel)
             Spacer(modifier = modifier.padding(12.dp))
             Text(text = dummyDataUiModel.firstName, color = Color.Black)
             Spacer(modifier = modifier.padding(13.dp))

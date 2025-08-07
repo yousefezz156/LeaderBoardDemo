@@ -1,19 +1,13 @@
-package com.example.leaderboardscreenmodule.leaderboard.uicomponents
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents
 
-import android.graphics.RenderEffect
-import android.graphics.Shader
-import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,17 +16,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,23 +30,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asComposeRenderEffect
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import com.example.leaderboardscreenmodule.DumyApi.DummyDataUiModel
 import com.example.leaderboardscreenmodule.R
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
-import kotlinx.coroutines.delay
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.uicomponents.MockInfo
 
 @Composable
 fun CircleShapeTop(
@@ -73,9 +57,7 @@ fun CircleShapeTop(
 
     val density = LocalDensity.current
 
-    var showBlur by remember {
-        mutableStateOf(true)
-    }
+
 
 
 
@@ -142,7 +124,7 @@ fun CircleShapeTop(
 
                 }
                 Spacer(modifier = modifier.padding(top = if (dummyDataUiModel.id == 1) 10.dp else 5.dp))
-                MockInfo(name = "Yousef", score = 1234, rank = dummyDataUiModel.id, show = show)
+                TopThreeInfo(name = dummyDataUiModel.firstName, score = 1234, rank = dummyDataUiModel.id, show = show)
             }
         }
 

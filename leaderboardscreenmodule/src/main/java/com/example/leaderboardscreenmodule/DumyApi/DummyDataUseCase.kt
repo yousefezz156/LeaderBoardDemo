@@ -1,7 +1,7 @@
 package com.example.leaderboardscreenmodule.DumyApi
 
 import android.util.Log
-import com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi.LeaderBoarderRepository
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi.LeaderBoarderRepository
 
 class DummyDataUseCase(val repo: LeaderBoarderRepository = LeaderBoarderRepository() ) {
 

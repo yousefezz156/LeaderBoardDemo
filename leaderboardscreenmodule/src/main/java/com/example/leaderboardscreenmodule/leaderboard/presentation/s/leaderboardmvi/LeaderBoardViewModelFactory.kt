@@ -1,7 +1,4 @@
-package com.example.leaderboardscreenmodule.leaderboard.leaderboardmvi
-
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi
 
 //class LeaderBoardViewModelFactory(
 //    private val leaderBoarderRepository: LeaderBoarderRepository

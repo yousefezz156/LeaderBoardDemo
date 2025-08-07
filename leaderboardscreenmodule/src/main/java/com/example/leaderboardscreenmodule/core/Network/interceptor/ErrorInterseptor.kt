@@ -13,7 +13,7 @@ class ErrorInterseptor(val onErrorAction : (ErrorEvent) ->Unit) :Interceptor{
 
         if(response.code.toString().startsWith("20")){
             // means the response return success
-            errorInvoked = false
+            errorInvoked = false  // Invoke means call
         }else if(response.code != 200){
             when(response.code){
                 401 -> {onErrorAction.invoke(ErrorEvent.Unauthorized())}

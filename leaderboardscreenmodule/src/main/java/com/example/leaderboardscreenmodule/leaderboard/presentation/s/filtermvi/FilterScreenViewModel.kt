@@ -1,9 +1,8 @@
-package com.example.leaderboardscreenmodule.leaderboard.filterscreen.filtermvi
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.filtermvi
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockData
-import com.example.leaderboardscreenmodule.leaderboard.mockdata.MockList
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.MockData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

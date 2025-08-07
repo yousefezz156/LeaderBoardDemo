@@ -1,4 +1,4 @@
-package com.example.leaderboardscreenmodule.leaderboard.uicomponents
+package com.example.leaderboardscreenmodule.leaderboard.presentation.s.mockdata.uicomponents
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
