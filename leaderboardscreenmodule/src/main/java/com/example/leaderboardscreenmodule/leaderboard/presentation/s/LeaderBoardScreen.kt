@@ -1,17 +1,28 @@
 package com.example.leaderboardscreenmodule.leaderboard.presentation.s
 
 
+import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,16 +52,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.leaderboardscreenmodule.DumyApi.DummyDataUiModel
 import com.example.leaderboardscreenmodule.R
 import com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi.LeaderBoardIntent
 import com.example.leaderboardscreenmodule.leaderboard.presentation.s.leaderboardmvi.LeaderBoardViewModel
@@ -59,6 +75,7 @@ import com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponen
 import com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents.CircleShapeTop
 import com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents.DatePickerChooser
 import com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents.LeaderBoarderDialog
+import com.example.leaderboardscreenmodule.leaderboard.presentation.s.uicomponents.TopThreeInfo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -80,6 +97,14 @@ fun LeaderBoardScreen(
      navController: NavController,
     modifier: Modifier = Modifier
 ) {
+
+    var configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+
+    var successLoaded by remember {
+        mutableStateOf(false)
+    }
     var showDialog by remember {
         mutableStateOf(false)
     }
@@ -102,6 +127,7 @@ fun LeaderBoardScreen(
     var showKing by remember {
         mutableStateOf(false)
     }
+
 
     val state = leaderBoardViewModel.state.collectAsState()
     var isRefreshing = state.value.isRefreshSuccess
@@ -126,10 +152,11 @@ fun LeaderBoardScreen(
         state = pullRefreshState,
         isRefreshing = isRefreshing,
         onRefresh = {
-            coroutineScope.launch { leaderBoardViewModel.onEvent(LeaderBoardIntent.RefreshData)
-                isRefreshing=state.value.isRefreshSuccess
+            coroutineScope.launch {
+                leaderBoardViewModel.onEvent(LeaderBoardIntent.RefreshData)
                 delay(1000)
-                leaderBoardViewModel.setRefreshKeyFalse() }
+                leaderBoardViewModel.setRefreshKeyFalse()
+            }
 
         }) {
 
@@ -169,7 +196,8 @@ fun LeaderBoardScreen(
                     )
                     Box(
                         modifier = modifier
-                            .offset(145.dp, 104.dp)
+                            .align(Alignment.BottomCenter)
+                            .padding(top = 100.dp)
                             .height(176.dp)
                             .width(122.dp)
                             .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
@@ -182,25 +210,35 @@ fun LeaderBoardScreen(
 
                     if (hasTop3) {
                         CircleShapeTop(
-                            show = isVisible3,
-                            x = 305.dp,
-                            y = 110.dp,
+                            //show = isVisible3,
+                            viewmodel = leaderBoardViewModel,
                             dummyDataUiModel = firstThreeApiItems[2],
                             background_color = R.color.blue_light,
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(end = if (isLandscape) 75.dp else 24.dp)
+
                         )
+                       // RankViewItem(leaderBoardData = firstThreeApiItems[2], height = 80.dp)
                         CircleShapeTop(
-                            50.dp, 110.dp,
+                            viewmodel = leaderBoardViewModel,
+
                             dummyDataUiModel = firstThreeApiItems[1],
                             background_color = R.color.orange,
-                            show = isVisible2,
+                           // show = isVisible2,
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(start = if (isLandscape) 75.dp else 24.dp)
                         )
                         CircleShapeTop(
-                            x = 170.dp,
-                            y = 56.dp,
+                            viewmodel = leaderBoardViewModel,
                             dummyDataUiModel = firstThreeApiItems[0],
                             background_color = R.color.yellow,
-                            show = isVisible1,
+                           // show = isVisible1,
                             showNum1 = showKing,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(start = 75.dp, end = 75.dp)
                         )
                     }
 
@@ -211,8 +249,8 @@ fun LeaderBoardScreen(
 
             Column(
                 modifier = modifier
-                    .width(410.dp)
-                    .height(800.dp)
+                    .fillMaxWidth()
+                    .fillMaxHeight()
                     .clip(RoundedCornerShape(topStart = 19.dp, topEnd = 19.dp))
                     .background(color = Color.White)
             ) {
@@ -292,7 +330,8 @@ fun LeaderBoardScreen(
                 )
 
                 Spacer(modifier = modifier.padding(top = 16.dp))
-                LazyColumnForData( viewModel = leaderBoardViewModel)
+                LazyColumnForData( viewModel = leaderBoardViewModel, onSuccess = {successLoaded=true})
+
 
 
             }
@@ -367,18 +406,19 @@ fun LeaderBoardScreen(
             delay(1000)
             showKing = true
         }
-    }
+   }
 
 
 
 @Composable
 fun LazyColumnForData(
-    viewModel: LeaderBoardViewModel
+    viewModel: LeaderBoardViewModel,
+    onSuccess:(Boolean) ->Unit
 ) {
     //val list by viewModel.state.collectAsState()
 
     val listPage = viewModel.pageConfig.collectAsLazyPagingItems()
-    var lastIndex: Boolean
+    var lastIndex=false
 
 
 
@@ -394,6 +434,8 @@ fun LazyColumnForData(
             Log.d("PagingDebug", "index $lastIndex")
         }
 
+
+
             when {
                 listPage.loadState.append is LoadState.Loading -> {
                     item {   CircularProgressIndicator(
@@ -406,6 +448,8 @@ fun LazyColumnForData(
 
                 }
             }
+
+
 
 
 
@@ -427,13 +471,89 @@ fun LazyColumnForData(
 
     }
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
+@Composable
+fun RankViewItem(
+    leaderBoardData: DummyDataUiModel,
+    height: Dp,
+    modifier: Modifier = Modifier,
+) {
+
+    var state by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(Unit) {
+        delay(if (leaderBoardData.id == 3) 0 else if (leaderBoardData.id == 2) 1000 else 2000)
+        state = true
+    }
+
+    BoxWithConstraints(modifier = modifier) {
+        val centerX = (maxWidth / 2)
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(height)
+                .background(
+                    color = when (leaderBoardData.id) {
+                        2 -> Color(0xFF0D0D80)
+                        3 -> Color(0xFF0D0D80)
+                        else -> Color(0xFF0171CE)
+                    },
+                    shape = RoundedCornerShape(
+                        topStart = if (leaderBoardData.id == 1) 30.dp else if (leaderBoardData.id == 2) 12.dp else 0.dp,
+                        topEnd = if (leaderBoardData.id == 1) 30.dp else if (leaderBoardData.id == 3) 12.dp else 0.dp,
+                        bottomStart = if (leaderBoardData.id == 1) 0.dp else if (leaderBoardData.id == 2) 12.dp else 0.dp,
+                        bottomEnd = if (leaderBoardData.id == 1) 0.dp else if (leaderBoardData.id == 3) 12.dp else 0.dp
+                    )
+                )
+                .padding(horizontal = 8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            AnimatedVisibility(
+                visible = state,
+                enter = fadeIn(animationSpec = tween(durationMillis = 1000)) +
+                        slideInVertically(
+                            animationSpec = tween(durationMillis = 1000),
+                        ),
+                exit = fadeOut() +
+                        slideOutVertically()
+            ) {
+                TopThreeInfo(dummyDataUiModel = leaderBoardData, score = 1234)
+            }
+        }
+
+        Box(
+            modifier = modifier.offset(
+                x = centerX - if (leaderBoardData.id == 1) 36.5.dp else 27.dp,
+                y = if (leaderBoardData.id == 1) (-80).dp else (-40).dp
+            )
+        ) {
+            AnimatedVisibility(
+                visible = state,
+                enter = fadeIn(animationSpec = tween(durationMillis = 1000)) +
+                        slideInVertically(
+                            animationSpec = tween(durationMillis = 1000)
+                        ),
+                exit = fadeOut() +
+                        slideOutVertically()
+            ) {
+//                RankCircle(leaderBoardData)
+            }
+        }
+    }
+}
 
 
 
 
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Preview(showBackground = true)
-//@Composable
-//fun LeaderBoardPreview() {
-//    LeaderBoardScreen(viewModel(), mockList = MockList().getList())
-//}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun LeaderBoardPreview() {
+    LeaderBoardScreen(viewModel(), rememberNavController())
+}
+

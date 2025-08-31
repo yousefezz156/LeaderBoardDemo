@@ -10,6 +10,7 @@ import com.example.leaderboardscreenmodule.leaderboard.domain.LeaderBoardUseCase
 import com.example.leaderboardscreenmodule.leaderboard.domain.RankDataSource
 import com.example.leaderboardscreenmodule.theme.backgroundColorsForWhiteText
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,14 +30,16 @@ class LeaderBoardViewModel(
     private var _colors = MutableStateFlow(backgroundColorsForWhiteText)
     var colors = _colors.asStateFlow()
 
+    lateinit var pageSource:RankDataSource
+
     val pageConfig =
         Pager(PagingConfig(pageSize = 6, prefetchDistance = 1),
             pagingSourceFactory = { setDataSource() })
             .flow.cachedIn(viewModelScope) // here we convert it to flow so the UI can read it
 
     private fun setDataSource(): RankDataSource {
-        val dataSource = RankDataSource(dummyDataUseCase)
-        return dataSource
+        pageSource= RankDataSource(dummyDataUseCase)
+        return pageSource
     }
 
 //    fun loadNextPage() {
@@ -59,10 +62,15 @@ class LeaderBoardViewModel(
     }
 
     fun refreshScreen(){
-        viewModelScope.launch {
-            rankDataSource.invalidate()
-            _state.value=_state.value.copy(isRefreshSuccess = true)
-        }
+
+            _state.value = _state.value.copy(isRefreshSuccess = true)
+
+            // refresh data source
+            pageSource.invalidate()
+
+//            _state.value = _state.value.copy(
+//                isRefreshSuccess = false
+//            )
 
     }
 

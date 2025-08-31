@@ -13,6 +13,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -74,54 +75,35 @@ internal class MainActivity : ComponentActivity() {
 internal fun testAnimatedVisibility(modifier: Modifier = Modifier) {
 
 
-    var changeState by remember { mutableStateOf(false) }
-    val density = LocalDensity.current
+//    Box(
+//        modifier = Modifier.fillMaxSize(),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        // This Box is automatically centered within the parent Box
+//        Box(
+//            modifier = Modifier
+//                .size(100.dp)
+//                .background(Color.Blue)
+//        )
+//    }
 
-    LaunchedEffect(Unit) {
-        delay(1000)
-        changeState = true
-    }
-
-
-    Column(verticalArrangement = Arrangement.Center,
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = Color.White)
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxSize()
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = modifier.fillMaxWidth()
-        ) {
-            Button(onClick = { changeState = true }) {
-                Text(text = "test")
-            }
-        }
-        Spacer(modifier = modifier.padding(20.dp))
-        AnimatedVisibility(
-            visible = changeState,
-            enter = slideInVertically {
-                // Slide in from 40 dp from the top.
-                with(density) { -40.dp.roundToPx() }
-            } + expandVertically(
-                // Expand from the top.
-                expandFrom = Alignment.Top
-            ) + fadeIn(
-                // Fade in with the initial alpha of 0.3f.
-                initialAlpha = 0.4f
-            ), modifier = modifier.offset(120.dp,50.dp )) {
-//            Text(
-//                "Hello",
-//                Modifier
-//                    .fillMaxWidth()
-//                    .height(200.dp)
-//            )
-            Box(modifier = modifier
-                .size(200.dp)
-                .clip(CircleShape)
-                .background(color = Color.Red)){}
-        }
+        // You now have access to constraints like maxWidth and maxHeight
+        val boxSize = 100.dp
 
+        // Calculate the exact center point
+        val offsetX = (maxWidth - boxSize) / 2
+        val offsetY = (maxHeight - boxSize) / 2
+
+        // Use the calculated offsets to place the Box
+        Box(
+            modifier = Modifier
+                .size(boxSize)
+                .offset(x = offsetX, y = offsetY)
+                .background(Color.Red)
+        )
     }
 }
 

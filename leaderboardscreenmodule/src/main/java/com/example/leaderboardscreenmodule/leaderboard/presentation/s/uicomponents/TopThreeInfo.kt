@@ -12,10 +12,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.leaderboardscreenmodule.DumyApi.DummyDataUiModel
 import com.example.leaderboardscreenmodule.R
 
 @Composable
-fun TopThreeInfo(name: String, score: Int, rank: Int, show:Boolean,modifier: Modifier = Modifier) {
+fun TopThreeInfo(dummyDataUiModel: DummyDataUiModel,score:Int,modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
 //            modifier = modifier.padding(
@@ -25,7 +26,7 @@ fun TopThreeInfo(name: String, score: Int, rank: Int, show:Boolean,modifier: Mod
 //            )
     ) {
         Text(
-            text = name,
+            text = dummyDataUiModel.firstName,
             color = Color.White,
             fontSize = 12.sp,
 
@@ -33,14 +34,14 @@ fun TopThreeInfo(name: String, score: Int, rank: Int, show:Boolean,modifier: Mod
         Spacer(modifier = modifier.padding(6.dp))
         Text(
             text = score.toString() + " Pts",
-            color = if (rank == 2) colorResource(id = R.color.orange) else if (rank == 3) colorResource(
+            color = if (dummyDataUiModel.id == 2) colorResource(id = R.color.orange) else if (dummyDataUiModel.id == 3) colorResource(
                 id = R.color.blue_light
             ) else colorResource(
                 id = R.color.yellow
             ),
             fontSize = 15.sp
         )
-        Spacer(modifier = modifier.padding(if (rank == 1) 16.dp else 2.dp))
-        Text(rank.toString(), color = Color.White, fontSize = 32.sp)
+        Spacer(modifier = modifier.padding(if (dummyDataUiModel.id == 1) 16.dp else 2.dp))
+        Text(dummyDataUiModel.id.toString(), color = Color.White, fontSize = 32.sp)
     }
 }
